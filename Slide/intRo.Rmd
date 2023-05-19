@@ -1,15 +1,19 @@
 ---
-title: "An int`R`oduction to `R`"
-date: 'Erasmus+ QHelp seminar, Padova, 10\textsuperscript{th} July 2022'
-author: "Ottavia M. Epifania"
-institute: "Univerisity of Padova (IT)"
+title: "Un'int`R`oduzione"
+date: '8-9 giugno 2023'
+author: |
+  | Ottavia M. Epifania
+  | Università di Padova
+institute: "Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)"
 output: 
   beamer_presentation: 
-    theme: metropolis
-    colortheme: beaver
-    fonttheme: serif
+    theme: EastLansing
+    colortheme: spruce
     highlight: monochrome
 header-includes:
+    - \AtBeginDocument{\title[co\texttt{R}so]{Un'int\texttt{R}oduzione}}
+    - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
+    # - \AtBeginDocument{\institute[uniCATT]{Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)}
     - \usepackage{graphicx} 
     - \usepackage{setspace}
     - \usepackage{tabularx}
@@ -23,16 +27,17 @@ header-includes:
     - \usepackage{booktabs}
     - \newcommand\Factor{1.2}
     - \setbeamerfont{subtitle}{size=\large, series=\bfseries}
-    - \definecolor{template}{RGB}{181, 18, 27}
+    - \definecolor{template}{RGB}{155, 0, 20}
     - \definecolor{background}{RGB}{250, 250, 250}
     - \setbeamercolor{frametitle}{bg=background}
-    - \setbeamertemplate{frametitle}[default][center]
+    - \setbeamertemplate{frametitle}{\color{template}\bfseries\insertframetitle\par\vskip-6pt\hrulefill}
     - \AtBeginSection{\frame{\sectionpage}}
     - \setbeamercolor{section name}{fg=white}
-    - \setbeamercolor{title}{fg=template, bg=template}
+    - \setbeamercolor{title}{fg=template, bg=background}
     - \setbeamercolor{section title}{fg=template}
     - \setbeamercolor{frame subtitle}{fg=template}
     - \setbeamercolor{title}{fg=template}
+    - \setbeamercolor{background canvas}{bg=background}
     - \setbeamersize{text margin left=5mm,text margin right=5mm} 
     - \AtBeginSection[]
           {
@@ -40,7 +45,7 @@ header-includes:
              \frametitle{Table of Contents}
              \tableofcontents[currentsection]
               \end{frame}
-            }
+          }
 editor_options: 
   chunk_output_type: console
 ---
@@ -77,119 +82,294 @@ library(knitr)
 
 \tableofcontents
 
-## Course material 
+## Materiale del corso 
 
 ```{r out.width="40%", fig.align='center', echo=FALSE}
 knitr::include_graphics("img/qr-code.png")
 ```
+ 
 
-NB: This material is based on the lessons by Prof. Florian Wickelmaier
+# PeRché?
 
-\small 
-Let's all set: 
+## Le cose belle
 
-```{r}
-set.seed(999)
-```
+- Open-source: `R` è gratuito, `RStudio` (la IDE di `R`) no, ma la versione free è più che sufficiente
+
+- Permette la replicabilità dei risultati $\rightarrow$ è gratis
+
+- *R community is the beast feature of R*
+
+- Aiuto online e gratuito
 
 
-# Who aRe you?
+## Le cose un po' meno belle 
 
-##
+- Difficile da imparare all'inizio
 
-- `R` is an open source software for statistical computing, graphics, and so much more
+- Non è intuitivo (all'inizio) $\rightarrow$ se non si ha già una vaga idea di dove partire non si riesce a fare nulla
 
-- `RStudio` is the perfect IDE for `R`  $\rightarrow$ allows for a better, easier use of `R` 
 
-- `R` runs on Windows, MacOs, Unix
-
-## Calculato`R`
-
-```{r eval = FALSE} 
-3 + 2   # plus
-3 - 2   # minus
-3 * 2   # times
-3 / 2   # divide
-sqrt(4) # square root
-log(3)  # natural logarithm
-exp(3)  # exponential
-```
-
-Use brackets as you would do in a normal equation:
-
-```{r eval = FALSE}
-(3 * 2)/ sqrt(25 + 4) # Look at me!
-```
-
-`R` ignores everything after # (it's a comment)
-
-## Assign 
-
-The results of the operations can be "stored" into objects with specific names defined by the users. 
-
-To assign a value to an object, there are two operators: 
-
-1. `x = exp(2^2)`
-
-2. `X <- log(2^2)`
-
-The elements on the right are assigned to the object on the left 
-
-\textcolor{red}{Careful!} `R` is case sensitive: `x` and `X` are two different objects!!!
-
-## Variable names
-
-```{r echo = FALSE, out.width="45%"}
-knitr::include_graphics("img/meme.jpg")
-```
-
-Valid variable names are letters, numbers, dots, underscores (e.g.,
-`variable_name`)
-
-Variable names cannot start with numbers
-
-Again, `R` is case sensitive
+## Le cose cose belle nelle cose brutte
 
 
 
+- Più dimestichezza nell'analisi dei dati, più conoscenza del dato, modelli più complessi 
 
-# Get help
+
+- Permette di addentrarsi sempre di più nei linguaggi di programmazione
+
+- Imparare un altro linguaggio di programmazione dopo aver imparato `R` è (quasi) una passeggiata 
+
+<!-- ## La curva di apprendimento -->
+
+
+<!-- ```{r} -->
+<!-- library(ggplot2) -->
+
+<!-- data.exp = data.frame(sbj = 1:length(seq(0, 10, by =.01)),  -->
+<!--                       num = exp(seq(0, 10, by =.01)),  -->
+<!--                       log = log(seq(0, 10, by =.01))) -->
+
+
+
+<!-- ``` -->
+
+
+# Come è fatto 
 
 ## 
 
- `R` community is the best feature of `R`
+\vspace*{-0.5mm}
 
-Just copy \& paste any error message or warning in Google or ask Google "how to **[something]** in r"
+```{r, echo = FALSE, out.width="110%", fig.align='center'}
+knitr::include_graphics("img/Rstudio.png")
+```
 
- Ask `R` to help you! Type `?` in your console followed by the name of the function:
+
+# Con cosa lavoriamo 
+
+## 
+
+La gestione delle working directory è una delle cose meno intuitive di R 
+
+Rischiate di perdere dei pezzi e di non avere tutto ordinato nelle cartelle 
+
+Per risolvere questo problema $\rightarrow$ si possono usare gli R project (progetti R)
+
+Un progetto R crea una sua directory, tutti i file che vengono salvati al suo interno sono sempre accessibile senza bisogno di settare *a mano* tutte le volte la directory
+
+Sono molto comodi perché: 
+
+1. Permettono di avere più istanze R aperte contemporaneamente $\rightarrow$ è possibile lavorare su più progetti contemporaneamente 
+
+2. Tenendo tutti i file ordinati vi permettono di poter risalire a cosa avete fatto mesi prima (utile quando vi arrivano le revisioni di un paper)
+
+##  Creare un progetto R 
+
+File  $\rightarrow$ New project: 
+
+```{r echo = FALSE, out.width = "100%"}
+knitr::include_graphics("img/project1.png")
+```
+
+## 
+
+:::: columns
+
+::: column
+```{r echo = FALSE, out.width = "100%"}
+knitr::include_graphics("img/project2.png")
+```
+
+:::
+
+
+::: column
+```{r echo = FALSE, out.width = "10%"}
+knitr::include_graphics("img/project3.png")
+```
+
+:::
+::::
+
+
+
+
+
+
+
+# Le basi 
+
+
+## Simboli, variabili, funzioni
+
+\center 
+
+Simboli \hspace{0.8mm} variabili \hspace{0.8mm} funzioni \hspace{0.8mm}
+
+## Simboli
+
+Operatori: 
+
+```{r eval = FALSE} 
+3 + 2   # più
+3 - 2   # meno
+3 * 2   # per
+3 / 2   # diviso
+5 > 2   # maggiore di
+2 < 5   # minore di
+5 == 3 + 2 # uguale
+5 != 3  # diverso
+
+```
+
+\footnotesize
+
+Parentesi e altri simboli
+
+> `()` `[]` `{}` `""` `:` `;` `,`
+
+Operatori e parentesi si possono combinare insieme per risolvere equazioni: 
+
+```{r}
+(15 + 22)/(13 * 4)
+```
+
+
+
+
+## Variabili
+
+La varaibile (in senso statistico) viene registrata in una variabile (in senso informatico)
+
+\begin{block}{Variabile (Informatica)}
+
+è un oggetto che contiene informazione
+
+Si distinguono in base al tipo di informazione che contengono, che in R può essere: 
+
+\begin{itemize}
+\item `int`: numeriche (discrete, 1, 2, 3 ....)
+\item `num`: numeriche (continue, 0.01, 0.02, 0.03, ...)
+\item `logi`: logiche (TRUE, FALSE)
+\item `chr`: caratteri ("a", "B", "c", ...) 
+\item `factor`: fattori distinti da diversi livelli
+\end{itemize}
+
+
+
+\end{block}
+
+
+## Nomi delle variabili
+
+
+Alle variabili si può dare il nome che si vuole $\rightarrow$ non può iniziare con un numero
+
+
+\centering
+
+\texttt{modello\_1} \hspace{5mm} $\rightarrow$ Sì \hspace{5mm},  \hspace{3mm} \texttt{1Modello} \hspace{5mm} $\rightarrow$ No 
+
+\begin{alertblock}{Warning!}
+
+Attenzione perché R è case sensitive: 
+
+\centering
+
+\texttt{A} \hspace{3mm} $\neq$ \hspace{3mm} \texttt{a}
+
+\end{alertblock}
+
+Altro vincolo: Non si possono usare nomi che possono essere confusi con funzioni/oggetti interni di `R`: 
+
+\begin{exampleblock}{}
+
+`FALSE` è un oggetto logico di R, non possiamo usarlo come nome di una nostra variabile.
+\end{exampleblock}
+
+## 
+
+```{r echo = FALSE, out.width="50%"}
+knitr::include_graphics("img/meme.jpg")
+```
+
+
+\begin{columns}[T]
+\begin{column}{.50\linewidth}
+
+\begin{center}
+Molto bene
+\end{center}
+
+\texttt{media\_maschi}, \texttt{modello1}, \texttt{statistiche\_descrittive}
+
+\end{column}
+
+\begin{column}{.50\linewidth}
+\begin{center}
+Molto male 
+\end{center}
+
+\texttt{x3}, \texttt{x2}, \texttt{x1}
+\end{column}
+
+
+\end{columns}
+
+
+
+## Assign 
+
+Le variabili vengono create "assegnando" loro i risultati delle operazioni
+
+Esistono fondamentalmente due comandi di assegnazione
+
+
+1. `x = exp(2^2)` \vspace{3mm} =( non piace molto ai puristi di R ma è ugaule a Python
+
+2. `X <- log(2^2)` \vspace{3mm} =) Fate contenti i puristi di R
+
+La logica è che l'oggetto a destro (l'operazione e quindi il risultato che se ne ottiene) viene assegnato (`=` oppure `<-`) viene assegnato alla variabile (o oggetto) a destra
+
+\textcolor{template}{Attenzione!} Siccome `R` è case sensitive: `x` e `X` sono due oggetti differenti!
+
+<!-- ## Variabili: `character` -->
+
+<!-- Sono sequenze di caratteri  -->
+
+
+
+## Le funzioni 
+
+    my.function(arg1, arg2, arg3 = default)
+    
+
+
+
+
+
+## Aiuto
+
+\begin{center}
+
+\color{template} `R` community is the best feature of `R` \normalcolor
+\end{center}
+
+Copia \& Incolla l'errore su google
+
+Se non si sa fare qualcosa  "how to **[something]** in r"
+
+Chiedere a `R`: Nella consolle si può scrivere `?nome.funzione()` per accedere alla documentazione sulla funzione:
 
     ?mean()
 
-Will show you the help page of the `mean()` function
+Apre la documentazione sulla funzione `mean()` 
 
-# Be tidy
 
-## Organize your files
+## Funzioni 
 
-`R` projects are the best way to organize your files (and your workflow)
 
-They allow you to have all your files in a folder organized in sub folders 
-
-You don't have to worry about the working directories because it's all there!
-
-By creating a new project, you can also initialize a Shiny app 
-
-## Create a new `R` project
-
-File $\rightarrow$ New project and choose what is best for you (unless you have already initialized a directory for your project, select a new directory): 
-
-- `R` project "basic"
-
-- `R` package
-
-- `Shiny` project
-
-and so much more
 
 
 ## Take out the trash
