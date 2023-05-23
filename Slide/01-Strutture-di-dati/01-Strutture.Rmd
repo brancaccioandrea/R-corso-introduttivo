@@ -1,0 +1,648 @@
+---
+title: "stRutture di dati"
+date: '8-9 giugno 2023'
+author: |
+  | Ottavia M. Epifania
+  | Università di Padova
+institute: "Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)"
+output: 
+  beamer_presentation: 
+#    theme: Singapore
+    colortheme: spruce
+    highlight: kate
+header-includes:
+    - \AtBeginDocument{\title[st\texttt{R}utture]{st\texttt{R}utture di dati}}
+    - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
+    - \useinnertheme{circles}
+    - \usetheme[compressed]{Singapore}
+    - \usepackage{graphicx} 
+    - \usepackage{setspace}
+    - \usepackage{tabularx}
+    - \usepackage[english]{babel}
+    - \usepackage{tikzsymbols}
+    - \usepackage{subcaption}
+    - \usepackage{tikz}
+    - \usepackage{spot}
+    - \usepackage{tabularx}
+    - \usepackage[absolute,overlay]{textpos}
+    - \usepackage{booktabs}
+    - \newcommand\Factor{1.2}
+    - \setbeamerfont{subtitle}{size=\large, series=\bfseries}
+    - \definecolor{template}{RGB}{155, 0, 20}
+    - \definecolor{background}{RGB}{250, 250, 250}
+    - \setbeamercolor{frametitle}{bg=background}
+    - \setbeamertemplate{frametitle}{\color{template}\bfseries\insertframetitle\par\vskip-6pt\hrulefill}
+    - \AtBeginSection{\frame{\sectionpage}}
+    - \setbeamercolor{section name}{fg=white}
+    - \setbeamercolor{title}{fg=template, bg=background}
+    - \setbeamercolor{section title}{fg=template}
+    - \setbeamercolor{frame subtitle}{fg=template}
+    - \setbeamercolor{title}{fg=template}
+    - \setbeamercolor{background canvas}{bg=background}
+    - \setbeamersize{text margin left=5mm,text margin right=5mm}
+    - \setbeamercolor{section in head/foot}{bg=background, fg=template}
+    - \setbeamercolor{subsection in head/foot}{fg=template, bg=template!20}
+    - \AtBeginSection[]
+          {
+             \begin{frame}
+             \frametitle{Table of Contents}
+             \tableofcontents[currentsection]
+              \end{frame}
+          }
+editor_options: 
+  chunk_output_type: console
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      eval = TRUE, 
+                      message = FALSE, 
+                      comment="", 
+                      tidy=FALSE, 
+                      warning = FALSE, 
+                      fig.align = "center", 
+                      out.width = "70%")
+library(ggplot2)
+library(gridExtra)
+library(knitr)
+library(tidyverse)
+hook_output <- knitr::knit_hooks$get("output")
+knitr::knit_hooks$set(output = function(x, options) {
+if (!is.null(n <- options$out.lines)) {
+x <- xfun::split_lines(x)
+if (length(x) > n) {
+# truncate the output
+x <- c(head(x, n), "....\n")
+} 
+x <- paste(x, collapse = "\n")
+} 
+hook_output(x, options)
+})
+set.seed(9999)
+library(knitr)
+```
+
+
+## Table of contents
+
+\tableofcontents
+
+# Vettori
+
+## 
+
+Vengono creati **c**oncatenando diverse variabili insieme 
+
+Si usa la funzione `c()`
+
+Tutte le variaili all'interno della funzione `c()` vanno separate da una virgola
+
+Diversi tipi di variabili $\rightarrow$ diversi tipi di vettori: 
+
+- `int`: vettori numerici (numeri interi)
+- `num`: vettori numerici (numeri continui)
+- `logi`: vettori logici
+- `chr`: vettori character
+- `factor`: vettori factor con diversi livelli 
+
+
+
+## `int` \& `num` {.plain}
+
+`int`: numeri interi: `r -3:3`
+
+```{r}
+mesi = c(5, 6, 8, 10, 12, 16)
+```
+
+```{r echo = FALSE}
+mesi
+```
+
+
+`num`: tutti i valori numerici tra $-\infty$ e $+\infty$: `r rnorm(6)`
+
+```{r}
+peso = seq(3, 11, by = 1.5) 
+```
+
+```{r echo = FALSE}
+peso
+```
+
+## `logi`
+
+Valori logici possono essere veri `TRUE` (`T`) o falsi `FALSE` (`F`): 
+
+```{r}
+v_logi = c(TRUE, TRUE, FALSE, FALSE, TRUE)
+```
+
+```{r echo = FALSE}
+v_logi
+```
+
+Si usano per testare delle condizioni: 
+
+```{r}
+mesi > 12
+```
+## `chr` \& `factor`
+
+`chr`: characters: `r c(letters[1:3], LETTERS[4:6])`
+
+```{r}
+v_chr = c(letters[1:3], LETTERS[4:6])
+```
+
+```{r echo = FALSE}
+v_chr 
+```
+
+
+`factor`: Usa numeri o carattarri per identificare i livelli della variabile: 
+
+```{r}
+ses = factor(c(rep(c("low", "medium", "high"), each = 2)))
+```
+
+```{r echo = FALSE}
+ses
+```
+
+Si può cambaire l'ordine dei livelli:
+
+```{r}
+ses1 = factor(ses, levels = c("medium", "high", "low")) 
+```
+```{r echo = FALSE}
+ses1
+```
+
+
+
+## Creare i vettori
+
+\small
+
+Concatenare le variabili con `c()`: `vec = c(1, 2, 3, 4, 5)`
+
+Utilizzando le sequenze: 
+
+```{r}
+-5:5 # vector of 11 numbers from -5 to 5
+
+seq(-2.5, 2.5, by = 0.5) # sequence in steps of 0.5 
+```
+
+Ripetendo gli elementi: 
+
+```{r}
+rep(1:3, 4)
+```
+
+## Creare i vettori II
+
+
+```{r}
+rep(c("condA", "condB"), each = 3)
+```
+
+```{r}
+rep(c("on", "off"), c(3, 2))
+```
+```{r}
+paste0("item", 1:4)
+```
+
+
+
+## Non mischiate i vettori! \small a meno che non lo vogliate davvero
+
+`int` + `num` $\rightarrow$ `num` 
+
+`int`/`num` + `logi` $\rightarrow$ `int`/`num` 
+
+`int`/`num` + `factor` $\rightarrow$ `int`/`num` 
+
+`int`/`num` + `chr` $\rightarrow$ `chr`
+
+`chr` + `logi` $\rightarrow$ `chr`
+
+
+## Vettori e operazioni
+
+I vettori possono essere sommati/divisi/moltiplicati tra di loro o anche per un numero singolo
+
+
+```{r}
+a = c(1:8) # vettore di lunghezza 8
+a
+b = c(4:1) # vettore di lunghezza 4
+b 
+
+a - b # il vettore b è "riciclato" sul vettore a
+```
+
+Se i vettori non hanno la stessa lunghezza (o uno non è un multiplo dell'altro) ottenete un warning 
+
+
+## Vettori e operazioni II
+
+Applicando una funzione a un vettore $\rightarrow$ viene applicata a **tutti** gli elementi del vettore
+
+```{r}
+sqrt(a)
+```
+
+La stessa operazione si può applicare a ogni singolo elemento del vettore 
+
+```{r}
+(a - mean(a))^2 # squared deviation
+```
+
+
+## Indicizzare i vettori 
+
+Come si va a "raggiungere" un particolare elemento all'interno del vettore? 
+
+
+```{r eval=TRUE}
+nomi = c("Pasquale", "Egidio", "Debora", "Luca", "Andrea")
+```
+
+
+\begin{table}
+\centering
+\begin{tabular}{p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}}
+\hline
+\multicolumn{1}{|c|}{Pasquale} & \multicolumn{1}{|c|}{Egidio}& \multicolumn{1}{|c|}{Debora} & \multicolumn{1}{|c|}{Luca} & \multicolumn{1}{|c|}{Andrea} \\\hline
+& & & & \\
+
+\multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}& \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5}\\
+\end{tabular}
+\end{table}
+
+\pause 
+
+\vspace{5mm}
+
+\centering 
+
+`nome_vettore[indice]`
+
+## Indicizzare i vettori II 
+
+\begin{table}
+\centering
+\begin{tabular}{p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}}
+\hline
+\multicolumn{1}{|c|}{Pasquale} & \multicolumn{1}{|c|}{Egidio}& \multicolumn{1}{|c|}{Debora} & \multicolumn{1}{|c|}{Luca} & \multicolumn{1}{|c|}{Andrea} \\\hline
+& & & & \\
+
+\multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}& \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5}\\
+\end{tabular}
+\end{table}
+
+\centering
+\pause
+
+`nomi[1]` $\rightarrow$ \pause `r nomi[1]`
+
+`nomi[3]` $\rightarrow$ \pause `r  nomi[3]`
+
+`nomi[seq(2, 5, by = 2)]` $\rightarrow$ \pause `r nomi[seq(2, 5, by = 2)]`
+
+## Indicizzare i vettori: Esempi 
+
+\centering
+
+```{r}
+peso
+```
+
+
+\small
+```{r eval=TRUE}
+peso[2]        # secondo elemento del vettore peso
+(peso[6] = 15.2) # sostituisce il sesto elemento del v. peso
+peso[seq(1, 6, by = 2)] # elementi 1, 3, 5
+peso[2:6]      # dal 2 al 6 elemento di peso
+peso[-2]      # vettore peso senza il secondo elemento
+```
+
+
+## Indicizzare i vettori usando la logica
+
+
+
+```{r  eval=TRUE}
+peso[peso > 7] # valori in peso maggiori di 7
+peso[peso >= 4.5 & peso < 8] # valori tra 4.5 e 8 
+```
+
+
+
+# Matrici 
+
+
+## Un vettore che ci ha creduto abbastanza
+### Quel che basta per vincere una seconda dimensione 
+
+
+
+`matrix(data, nrow, ncol, byrow = TRUE)`
+
+Crea una matrice $3 \times 4$ e la assegna all'oggetto `A`:
+
+```{r}
+A = matrix(1:12, nrow=3, ncol = 4, byrow = FALSE)
+A
+```
+
+\vspace{5mm}
+
+
+WARNING: i dati all'interno della matrice devono essere tutti dello stesso tipo
+
+
+## Etichette 
+
+
+```{r, tidy=TRUE}
+rownames(A) = c(paste("riga", 1:nrow(A), sep = "_")) 
+
+colnames(A) = c(paste("colonna", 1:ncol(A), sep = "_"))
+
+A
+
+```
+
+
+## Trasposta della matrice: 
+
+
+
+\small
+
+```{r}
+A
+```
+
+
+\small 
+```{r}
+t(A)
+```
+
+
+
+## Creare le matrici (ancora)
+
+Le matrici si possono anche creare concatenando vettori colonna:
+\small
+
+```{r eval=TRUE}
+cbind(a1 = 1:4, a2 = 5:8, a3 = 9:12) 
+```
+
+o vettori riga: 
+
+```{r}
+rbind(a1 = 1:4, a2 = 5:8, a3 = 9:12)
+```
+
+
+## Indicizzare le matrici 
+
+Abbiamo due dimensioni: 
+
+
+```{r echo = FALSE, results='asis'}
+
+
+my.mat = rbind("[1,]" = c("$1, 1$", "$1, 2$", "$1, 3$"), 
+       "[2,]" = c("$2, 1$", "$2, 2$", "$2, 3$"), 
+       "[3,]" = c("$3, 1$", "$3, 2$", "$3, 3$"))
+colnames(my.mat) = c("[,1]", "[,2]", "[,3]")
+my.mat %>% kable(align = "c")
+
+```
+
+
+\centering 
+
+`my_matrix[righe, colonne]`
+
+
+## Indicizzare le matrici: In pratica
+
+\small
+```{r}
+A
+```
+
+\onslide<1->  `A[1, ]` $\rightarrow$ \onslide<2-> `r A[1, ]`
+
+\onslide<1->`A[2, ]` $\rightarrow$ \onslide<3-> `r A[2, ]`
+
+\onslide<1->`A[2, 3]` $\rightarrow$ \onslide<4-> `r A[2, 3]` 
+
+
+
+
+# Array
+
+## Una matrice che ci ha creduto davvero
+### Davvero troppo
+
+\vspace*{5mm}
+
+    array(data, c(nrow, ncol, ntab))
+
+\vspace{3mm}
+
+Avendo 3 argomenti oltre i dati `nrow, ncol, ntab`, la loro indicizzazione prevede l'utilizzo di due virgole per accedere ai singoli argomenti: 
+
+`nome_array[righe, colonne, tab]`
+
+
+## Un array 
+\footnotesize
+
+```{r}
+my_array = array(1:20, c(2, 5, 3)) # 2 x 5 x 3 array
+my_array
+```
+
+
+## Indicizzare l'array
+
+\small 
+
+\onslide<1->
+
+`my_array[1, , ]`
+
+\onslide<2->
+```{r echo = FALSE}
+my_array[1, , ]
+```
+
+\onslide<1->
+
+`my_array[, 2, ]`
+
+\onslide<3->
+```{r echo = FALSE}
+my_array[, 2 , ]
+```
+
+\onslide<1->
+
+`my_array[, , 3]`
+
+\onslide<4->
+```{r echo = FALSE}
+my_array[, , 3]
+```
+
+
+# Liste 
+
+## Un array con più senso 
+ 
+Sono dei contenitori per diversi tipi di oggetti (e.g., vettori, data frames, altre liste, matrici, array ecc.)
+
+Ai loro elementi possono essere assegnati dei nomi: 
+\small
+```{r}
+my_list = list(w = peso, m = mesi, s = ses1, a = A)
+names(my_list)
+
+str(my_list)
+```
+
+
+## Indicizzare le liste 
+
+Gli elementi della lista possono essere indicizzati con `$` (se la lista ha dei nomi):
+
+```{r}
+my_list$m # vettore dei mesi
+```
+
+
+oppure con `[[]]`: 
+
+::: columns
+
+:::: column
+
+Nome dell'elemento
+
+```{r}
+my_list[["m"]]
+```
+
+::::
+
+:::: column
+Posizione dell'elemento: 
+
+```{r}
+my_list[[2]]
+```
+
+::::
+
+
+
+:::
+
+
+
+
+
+# Data frames
+
+## Una lista più ordinata
+
+
+I data frames sono delle liste di vettori di uguale lunghezza
+
+I diversi vettori possono contenere informazioni di diverse natura
+
+I data frame più comuni sono i data frame in versione wide (i.e., $soggetti \times variabili$) $\rightarrow$ `nrow(data)` $=$ numero di soggetti: 
+
+\small
+```{r}
+id = paste0("sbj", 1:6)
+babies = data.frame(id, mesi, peso)
+```
+
+```{r echo=TRUE}
+babies
+```
+
+
+## Indicizzare i data frame 
+
+Vale tutto quello visto per le matrici: 
+
+::: columns
+
+:::: column
+Prima riga del data frame `babies`
+
+`babies[1, ]` 
+::::
+
+:::: column
+Prima colonna del data frame `babies`
+
+`babies[, 1]` 
+::::
+:::
+
+In più:
+
+```{r eval = FALSE}
+babies$mesi # colonna mesi di babies
+
+babies$mesi[2] # secondo elemento del vettore colonna
+
+babies[, "id"] # column id
+
+babies[2, ] # second row of babies (obs on baby 2)
+```
+
+Logic applies:
+
+```{r eval = FALSE}
+babies[babies$peso > 7, ] # filtra per tutte le righe con peso > 7
+babies[babies$id %in% c("sbj1", "sbj6"), ] # restituisce le osservazioni di questi due soggetti
+```
+
+
+
+## Working with data frames II
+
+```{r}
+dim(babies) # data frame con 6 righe e 3 colonne
+
+names(babies) # = colnames(babies)
+
+```
+
+
+```{r eval=FALSE}
+View(babies) # open data viewer
+
+```
+
+\vfill
+
+\footnotesize Questi comandi possono essere usati anche su altri oggetti `R`
+
+
+
