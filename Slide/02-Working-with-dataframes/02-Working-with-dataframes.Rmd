@@ -48,6 +48,7 @@ header-includes:
              \frametitle{Table of Contents}
              \tableofcontents[currentsection]
               \end{frame}
+            }
 editor_options: 
   chunk_output_type: console
 ---
@@ -87,1331 +88,1337 @@ library(knitr)
 
 
 
-## Una lista più ordinata
+<!-- ## Una lista più ordinata -->
 
 
-```{r}
-my
-```
+<!-- ```{r} -->
 
+<!-- my_data = data.frame(sbj = paste("sbj", 1:12, sep ="_"),  -->
+<!--                      genere = rep(c("male", "female"), each = 6),  -->
+<!--                      benessere = rpois(12, 4),  -->
+<!--                      stipendio = rpois(12, 67)*100) -->
 
-\small
-```{r}
-id = paste0("sbj", 1:6)
-babies = data.frame(id, mesi, peso)
-```
+<!-- with(my_data, interaction.plot(stipendio, genere, benessere)) -->
+<!-- ``` -->
 
-```{r echo=TRUE}
-babies
-```
 
+<!-- \small -->
+<!-- ```{r} -->
+<!-- id = paste0("sbj", 1:6) -->
+<!-- babies = data.frame(id, mesi, peso) -->
+<!-- ``` -->
 
-## Working with data frames III
+<!-- ```{r echo=TRUE} -->
+<!-- babies -->
+<!-- ``` -->
 
 
-```{r}
-str(babies) # show details on babies
-```
+<!-- ## Working with data frames III -->
 
-```{r}
-summary(babies) # descriptive statistics
-```
 
+<!-- ```{r} -->
+<!-- str(babies) # show details on babies -->
+<!-- ``` -->
 
+<!-- ```{r} -->
+<!-- summary(babies) # descriptive statistics -->
+<!-- ``` -->
 
-## Sorting
 
-\small
 
-`order()`:
+<!-- ## Sorting -->
 
-```{r}
-babies[order(babies$peso), ] # sort by increasing peso
-```
-```{r eval = FALSE}
-babies[order(babies$peso,    # sort by decreasing peso
-             decreasing = T), ]
-```
+<!-- \small -->
 
-Multiple arguments in `order`:
+<!-- `order()`: -->
 
-```{r eval = FALSE}
-babies[order(babies$peso, babies$mesi, decreasing = TRUE), ]
-```
+<!-- ```{r} -->
+<!-- babies[order(babies$peso), ] # sort by increasing peso -->
+<!-- ``` -->
+<!-- ```{r eval = FALSE} -->
+<!-- babies[order(babies$peso,    # sort by decreasing peso -->
+<!--              decreasing = T), ] -->
+<!-- ``` -->
 
-## Aggregating
+<!-- Multiple arguments in `order`: -->
 
-Aggregate a response variable according to grouping variable(s) (e.g., averaging per experimental conditions):
+<!-- ```{r eval = FALSE} -->
+<!-- babies[order(babies$peso, babies$mesi, decreasing = TRUE), ] -->
+<!-- ``` -->
 
-```{r eval = FALSE}
-# Single response variable, single grouping variable
-aggregate(y ~ x, data = data, FUN, ...)
+<!-- ## Aggregating -->
 
-# Multiple response variables, multiple grouping variables
-aggregate(cbind(y1, y2) ~ x1 + x2, data = data, FUN, ...)
-```
+<!-- Aggregate a response variable according to grouping variable(s) (e.g., averaging per experimental conditions): -->
 
-## Aggregating: Example
+<!-- ```{r eval = FALSE} -->
+<!-- # Single response variable, single grouping variable -->
+<!-- aggregate(y ~ x, data = data, FUN, ...) -->
 
-\small
+<!-- # Multiple response variables, multiple grouping variables -->
+<!-- aggregate(cbind(y1, y2) ~ x1 + x2, data = data, FUN, ...) -->
+<!-- ``` -->
 
-```{r out.lines=4}
-ToothGrowth # Vitamin C and tooth growth (Guinea Pigs)
-```
+<!-- ## Aggregating: Example -->
 
-```{r}
-aggregate(len ~ supp + dose, data = ToothGrowth, mean)
-```
-## Reshaping: Long to wide
+<!-- \small -->
 
-Data can be organized in wide format (i.e., one line for each statistical unit) or in long format (i.e., one line for each observation).
+<!-- ```{r out.lines=4} -->
+<!-- ToothGrowth # Vitamin C and tooth growth (Guinea Pigs) -->
+<!-- ``` -->
 
-```{r out.lines = 7}
-Indometh # Long format
-```
+<!-- ```{r} -->
+<!-- aggregate(len ~ supp + dose, data = ToothGrowth, mean) -->
+<!-- ``` -->
+<!-- ## Reshaping: Long to wide -->
 
+<!-- Data can be organized in wide format (i.e., one line for each statistical unit) or in long format (i.e., one line for each observation). -->
 
-## Long to wide
+<!-- ```{r out.lines = 7} -->
+<!-- Indometh # Long format -->
+<!-- ``` -->
 
-\small
 
-```{r tidy=TRUE, tidy.opts=list(width.cutoff=60), out.lines=3}
-# From long to wide
-df.w <- reshape(Indometh, v.names="conc",
-                timevar="time",
-                idvar="Subject", direction="wide")
-```
+<!-- ## Long to wide -->
 
-```{r out.width="70%", out.lines=8, echo = FALSE}
-df.w
-```
+<!-- \small -->
 
+<!-- ```{r tidy=TRUE, tidy.opts=list(width.cutoff=60), out.lines=3} -->
+<!-- # From long to wide -->
+<!-- df.w <- reshape(Indometh, v.names="conc", -->
+<!--                 timevar="time", -->
+<!--                 idvar="Subject", direction="wide") -->
+<!-- ``` -->
 
-## Reshaping: Wide to long
+<!-- ```{r out.width="70%", out.lines=8, echo = FALSE} -->
+<!-- df.w -->
+<!-- ``` -->
 
-\small
 
-```{r tidy=TRUE, tidy.opts=list(width.cutoff=60)}
-# From wide to long
-df.l <- reshape(df.w, varying=list(2:12),
-                v.names="conc",
-                idvar="Subject", direction="long",
-times=c(.25, .5, .75, 1, 1.25, 2, 3, 4, 5, 6, 8))
-```
+<!-- ## Reshaping: Wide to long -->
 
-```{r echo=FALSE, out.lines=4}
-df.l
-```
+<!-- \small -->
 
-```{r out.lines=4}
-df.l[order(df.l$Subject), ] # reorder by subject
+<!-- ```{r tidy=TRUE, tidy.opts=list(width.cutoff=60)} -->
+<!-- # From wide to long -->
+<!-- df.l <- reshape(df.w, varying=list(2:12), -->
+<!--                 v.names="conc", -->
+<!--                 idvar="Subject", direction="long", -->
+<!-- times=c(.25, .5, .75, 1, 1.25, 2, 3, 4, 5, 6, 8)) -->
+<!-- ``` -->
 
-```
+<!-- ```{r echo=FALSE, out.lines=4} -->
+<!-- df.l -->
+<!-- ``` -->
 
-# Data input and output
+<!-- ```{r out.lines=4} -->
+<!-- df.l[order(df.l$Subject), ] # reorder by subject -->
 
-## Reading tabular txt files:
+<!-- ``` -->
 
-`ASCII` text files in tabular or spread sheet form (one line per
-observation, one column per variable) are read using
-`read.table()`
+<!-- # Data input and output -->
 
-```{r eval = FALSE}
-data = read.table("C:/RcouRse/file.txt", header = TRUE)
-```
+<!-- ## Reading tabular txt files: -->
 
-`data` is a data frame where the original numerical variables are converted in numeric vectors and character variables are converted in factors (not always).
+<!-- `ASCII` text files in tabular or spread sheet form (one line per -->
+<!-- observation, one column per variable) are read using -->
+<!-- `read.table()` -->
 
-Arguments:
+<!-- ```{r eval = FALSE} -->
+<!-- data = read.table("C:/RcouRse/file.txt", header = TRUE) -->
+<!-- ``` -->
 
-- `header`: variable names in the first line? `TRUE/FALSE`
-- `sep`: which separator between the columns (e.g., comma, `\t`)
-- `dec`: `1.2` or `1,2`?
+<!-- `data` is a data frame where the original numerical variables are converted in numeric vectors and character variables are converted in factors (not always). -->
 
+<!-- Arguments: -->
 
-## Reading other files
+<!-- - `header`: variable names in the first line? `TRUE/FALSE` -->
+<!-- - `sep`: which separator between the columns (e.g., comma, `\t`) -->
+<!-- - `dec`: `1.2` or `1,2`? -->
 
-```{r eval = F, tidy=FALSE}
-data = read.csv("C:/RcouRse/file.csv",
-                header = TRUE, sep = ";",
-                dec = ",")
-```
 
-From SPSS (file `.sav`):
+<!-- ## Reading other files -->
 
-```{r eval=FALSE}
-install.packages("foreign")
-library(foreign)
-data = read.spss("data.sav", to.data.frame = TRUE)
-```
+<!-- ```{r eval = F, tidy=FALSE} -->
+<!-- data = read.csv("C:/RcouRse/file.csv", -->
+<!--                 header = TRUE, sep = ";", -->
+<!--                 dec = ",") -->
+<!-- ``` -->
 
+<!-- From SPSS (file `.sav`): -->
 
-## Combine data frames
+<!-- ```{r eval=FALSE} -->
+<!-- install.packages("foreign") -->
+<!-- library(foreign) -->
+<!-- data = read.spss("data.sav", to.data.frame = TRUE) -->
+<!-- ``` -->
 
-If they have the same number of columns/rows
 
-```{r eval = FALSE}
-all_data = rbind(data, data1, data2) # same columns
-all_data = cbind(data, data1, data2) # same rows
-```
+<!-- ## Combine data frames -->
 
-If they have different rows/columns but they share at least one characteristic (e.g., `ID`):
+<!-- If they have the same number of columns/rows -->
 
-```{r eval=FALSE}
-all_data = merge(data1, data2,
-                 by = "ID")
-```
+<!-- ```{r eval = FALSE} -->
+<!-- all_data = rbind(data, data1, data2) # same columns -->
+<!-- all_data = cbind(data, data1, data2) # same rows -->
+<!-- ``` -->
 
+<!-- If they have different rows/columns but they share at least one characteristic (e.g., `ID`): -->
 
-If there are different IDs in the two datasets $\rightarrow$ added in new rows
+<!-- ```{r eval=FALSE} -->
+<!-- all_data = merge(data1, data2, -->
+<!--                  by = "ID") -->
+<!-- ``` -->
 
-`all_data` contains all columns in `data1` and `data2`. The columns of the IDs in `data1` but not in `data2` (and vice versa) will be filled with `NA`s accordingly
 
-## Export data
+<!-- If there are different IDs in the two datasets $\rightarrow$ added in new rows -->
 
-Writing text (or csv) file:
+<!-- `all_data` contains all columns in `data1` and `data2`. The columns of the IDs in `data1` but not in `data2` (and vice versa) will be filled with `NA`s accordingly -->
 
-```{r eval=FALSE}
-write.table(data, # what you want to write
-            file = "mydata.txt", # its name + extension
-            header = TRUE, # first row with col names?
-            sep = "\t",  # column separator
-            ....) # other arguments
-```
+<!-- ## Export data -->
 
-`R` environment (again):
+<!-- Writing text (or csv) file: -->
 
-```{r eval=FALSE}
-save(dat, file = "exp1_data.rda") # save something specific
-save(file = "the_earth.rda")      # save the environment
-load("the_earth.rda")             # load it back
-```
+<!-- ```{r eval=FALSE} -->
+<!-- write.table(data, # what you want to write -->
+<!--             file = "mydata.txt", # its name + extension -->
+<!--             header = TRUE, # first row with col names? -->
+<!--             sep = "\t",  # column separator -->
+<!--             ....) # other arguments -->
+<!-- ``` -->
 
-# Programming
+<!-- `R` environment (again): -->
 
-##
+<!-- ```{r eval=FALSE} -->
+<!-- save(dat, file = "exp1_data.rda") # save something specific -->
+<!-- save(file = "the_earth.rda")      # save the environment -->
+<!-- load("the_earth.rda")             # load it back -->
+<!-- ``` -->
 
-Be ready to make mistakes (a lot of mistakes)
+<!-- # Programming -->
 
-Coding is ~~hard~~ art
+<!-- ## -->
 
-Eyes on the prize, but take your time (and the necessary steps) to get there
+<!-- Be ready to make mistakes (a lot of mistakes) -->
 
-Remember: You're not alone $\rightarrow$ `stackoverflow` (or Google in general) is your best friend
+<!-- Coding is ~~hard~~ art -->
 
+<!-- Eyes on the prize, but take your time (and the necessary steps) to get there -->
 
-## `ifelse()`
+<!-- Remember: You're not alone $\rightarrow$ `stackoverflow` (or Google in general) is your best friend -->
 
-Conditional execution:
 
-Easy: `ifelse(test, if true, if false)`
+<!-- ## `ifelse()` -->
 
-```{r eval=TRUE}
-ifelse(peso > 7, "big boy", "small boy")
-```
-\begin{exampleblock}{Pros}
+<!-- Conditional execution: -->
 
-- Super easy to use
+<!-- Easy: `ifelse(test, if true, if false)` -->
 
-- Can embed multiple \texttt{ifelse()} cycles
-\end{exampleblock}
+<!-- ```{r eval=TRUE} -->
+<!-- ifelse(peso > 7, "big boy", "small boy") -->
+<!-- ``` -->
+<!-- \begin{exampleblock}{Pros} -->
 
+<!-- - Super easy to use -->
 
-\begin{alertblock}{Cons}
+<!-- - Can embed multiple \texttt{ifelse()} cycles -->
+<!-- \end{exampleblock} -->
 
-- It works fine until you have simple tests
-\end{alertblock}
 
-## `if () {} else {}`
+<!-- \begin{alertblock}{Cons} -->
 
-If you have only one condition:
+<!-- - It works fine until you have simple tests -->
+<!-- \end{alertblock} -->
 
-```{r eval = FALSE}
-if (test_1) {
-  command_1
-} else {
-  command_2
-}
-```
+<!-- ## `if () {} else {}` -->
 
-## `if () {} else {}`
+<!-- If you have only one condition: -->
 
-Multiple conditions:
+<!-- ```{r eval = FALSE} -->
+<!-- if (test_1) { -->
+<!--   command_1 -->
+<!-- } else { -->
+<!--   command_2 -->
+<!-- } -->
+<!-- ``` -->
 
-```{r eval = FALSE}
-if (test_1) {
-  command_1
-} else if (test_2) {
-  command_2
-} else {
-  command_3
-}
-```
+<!-- ## `if () {} else {}` -->
 
-`test_1` (and `test_2`, if you have it) **must** evaluate in either `TRUE` or `FALSE`
+<!-- Multiple conditions: -->
 
-```{r eval = FALSE}
-if(!is.na(x)) y <- x^2 else stop("x is missing")
-```
+<!-- ```{r eval = FALSE} -->
+<!-- if (test_1) { -->
+<!--   command_1 -->
+<!-- } else if (test_2) { -->
+<!--   command_2 -->
+<!-- } else { -->
+<!--   command_3 -->
+<!-- } -->
+<!-- ``` -->
 
+<!-- `test_1` (and `test_2`, if you have it) **must** evaluate in either `TRUE` or `FALSE` -->
 
-## Loops
+<!-- ```{r eval = FALSE} -->
+<!-- if(!is.na(x)) y <- x^2 else stop("x is missing") -->
+<!-- ``` -->
 
-`for()` and `while()`
 
-Repeat a command over and over again:
+<!-- ## Loops -->
 
-```{r eval = FALSE}
-# Don't do this at home
-x <- rnorm(10)
-y <- numeric(10)   # create an empty container
-for(i in seq_along(x)) {
-y[i] <- x[i] - mean(x)
-}
-```
+<!-- `for()` and `while()` -->
 
-The best solution would have been:
+<!-- Repeat a command over and over again: -->
 
-```{r eval=FALSE}
-y = x - mean(x)
-```
+<!-- ```{r eval = FALSE} -->
+<!-- # Don't do this at home -->
+<!-- x <- rnorm(10) -->
+<!-- y <- numeric(10)   # create an empty container -->
+<!-- for(i in seq_along(x)) { -->
+<!-- y[i] <- x[i] - mean(x) -->
+<!-- } -->
+<!-- ``` -->
 
-## Avoiding loops
+<!-- The best solution would have been: -->
 
-Don't loop, `apply()`!
+<!-- ```{r eval=FALSE} -->
+<!-- y = x - mean(x) -->
+<!-- ``` -->
 
-`apply()`
+<!-- ## Avoiding loops -->
 
+<!-- Don't loop, `apply()`! -->
 
-```{r eval = T, tidy=FALSE}
-X <- matrix(rnorm(20),
-            nrow = 5, ncol = 4)
-apply(X, 2, max) # maximum for each column
-```
+<!-- `apply()` -->
 
-\pause
 
-`for()`
+<!-- ```{r eval = T, tidy=FALSE} -->
+<!-- X <- matrix(rnorm(20), -->
+<!--             nrow = 5, ncol = 4) -->
+<!-- apply(X, 2, max) # maximum for each column -->
+<!-- ``` -->
 
-```{r eval =F}
-y = NULL
-for (i in 1:ncol(X)) {
-  y[i] = max(X[, i])
-}
-```
+<!-- \pause -->
 
+<!-- `for()` -->
 
+<!-- ```{r eval =F} -->
+<!-- y = NULL -->
+<!-- for (i in 1:ncol(X)) { -->
+<!--   y[i] = max(X[, i]) -->
+<!-- } -->
+<!-- ``` -->
 
 
-## Avoiding loops
 
-Group-wise calculations: `tapply()`
 
-`tapply()` (`t` for table) may be used to do group-wise calculations
-on vectors. Frequently it is employed to calculate group-wise
-means.
+<!-- ## Avoiding loops -->
 
-```{r}
-with(ToothGrowth,
-     tapply(len, list(supp, dose), mean))
-```
-(You could have done it with `aggregate()`)
+<!-- Group-wise calculations: `tapply()` -->
 
+<!-- `tapply()` (`t` for table) may be used to do group-wise calculations -->
+<!-- on vectors. Frequently it is employed to calculate group-wise -->
+<!-- means. -->
 
-## Writing functions
+<!-- ```{r} -->
+<!-- with(ToothGrowth, -->
+<!--      tapply(len, list(supp, dose), mean)) -->
+<!-- ``` -->
+<!-- (You could have done it with `aggregate()`) -->
 
-Compute Cohen's *d*:
 
-```{r tidy = FALSE}
-dcohen = function(group1, group2) { # Arguments
-  mean_1 = mean(group1) ; mean_2 = mean(group2)
-  var_1 = var(group1) ; var_2 = var(group2) # body
-  d = (mean_1 - mean_2)/sqrt(((var_1 + var_2)/2) )
-  return(d) # results
-}
-```
+<!-- ## Writing functions -->
 
-Use it:
+<!-- Compute Cohen's *d*: -->
 
-```{r eval = FALSE}
-dcohen(data$placebo, data$drug)
-```
+<!-- ```{r tidy = FALSE} -->
+<!-- dcohen = function(group1, group2) { # Arguments -->
+<!--   mean_1 = mean(group1) ; mean_2 = mean(group2) -->
+<!--   var_1 = var(group1) ; var_2 = var(group2) # body -->
+<!--   d = (mean_1 - mean_2)/sqrt(((var_1 + var_2)/2) ) -->
+<!--   return(d) # results -->
+<!-- } -->
+<!-- ``` -->
 
-## Named arguments
+<!-- Use it: -->
 
-Take this function:
+<!-- ```{r eval = FALSE} -->
+<!-- dcohen(data$placebo, data$drug) -->
+<!-- ``` -->
 
-```{r eval = F, tidy=FALSE}
-fun1 <- function(data, data.frame, graph, limit) { ... }
+<!-- ## Named arguments -->
 
-```
+<!-- Take this function: -->
 
-It can be called as:
+<!-- ```{r eval = F, tidy=FALSE} -->
+<!-- fun1 <- function(data, data.frame, graph, limit) { ... } -->
 
+<!-- ``` -->
 
-```{r eval =FALSE, tidy=FALSE}
-fun1(d, df, TRUE, 20)
-fun1(d, df, graph=TRUE, limit=20)
-fun1(data=d, limit=20, graph=TRUE, data.frame=df)
-```
+<!-- It can be called as: -->
 
-Positional matching and keyword
-matching (as in built-in functions)
 
-## Defaults
+<!-- ```{r eval =FALSE, tidy=FALSE} -->
+<!-- fun1(d, df, TRUE, 20) -->
+<!-- fun1(d, df, graph=TRUE, limit=20) -->
+<!-- fun1(data=d, limit=20, graph=TRUE, data.frame=df) -->
+<!-- ``` -->
 
-Arguments can be given default values $\rightarrow$ the arguments can be omitted!
+<!-- Positional matching and keyword -->
+<!-- matching (as in built-in functions) -->
 
-```{r eval=FALSE}
-fun1 <- function(data, data.frame, graph=TRUE,
-                 limit=20) { ... }
-```
+<!-- ## Defaults -->
 
+<!-- Arguments can be given default values $\rightarrow$ the arguments can be omitted! -->
 
-It can be called as
+<!-- ```{r eval=FALSE} -->
+<!-- fun1 <- function(data, data.frame, graph=TRUE, -->
+<!--                  limit=20) { ... } -->
+<!-- ``` -->
 
-```{r eval=F}
-ans <- fun1(d, df)
-```
 
-which is now equivalent to the three cases above, but:
+<!-- It can be called as -->
 
-```{r eval=F}
-ans <- fun1(d, df, limit=10)
-```
+<!-- ```{r eval=F} -->
+<!-- ans <- fun1(d, df) -->
+<!-- ``` -->
 
-which changes one of the defaults.
+<!-- which is now equivalent to the three cases above, but: -->
 
-## Methods and classes
+<!-- ```{r eval=F} -->
+<!-- ans <- fun1(d, df, limit=10) -->
+<!-- ``` -->
 
-The return value of a function may have a specified `class` $\rightarrow$ determines how it will be treated by other functions.
+<!-- which changes one of the defaults. -->
 
-For example, many classes have tailored `print` methods.
+<!-- ## Methods and classes -->
 
-```{r tidy=F, out.lines=7}
-methods(print)
-```
+<!-- The return value of a function may have a specified `class` $\rightarrow$ determines how it will be treated by other functions. -->
 
-## Define a print method!
+<!-- For example, many classes have tailored `print` methods. -->
 
-...as another function:
+<!-- ```{r tidy=F, out.lines=7} -->
+<!-- methods(print) -->
+<!-- ``` -->
 
-```{r}
-print.cohen <- function(obj){
-  cat("\nMy Cohen's d\n\n")
-  cat("Effect size: ", obj$d, "\n")
-  invisible(obj) # return the object
-}
-```
+<!-- ## Define a print method! -->
 
-We have to change our `dcohen` function a bit:
+<!-- ...as another function: -->
 
-```{r eval = FALSE}
-dcohen = function(group1, group2) { # Arguments
-  ...
-  dvalue = list(d = d)
-  class(dvalue) = "cohend"
-  return(dvalue) # results
-}
-```
+<!-- ```{r} -->
+<!-- print.cohen <- function(obj){ -->
+<!--   cat("\nMy Cohen's d\n\n") -->
+<!--   cat("Effect size: ", obj$d, "\n") -->
+<!--   invisible(obj) # return the object -->
+<!-- } -->
+<!-- ``` -->
 
-## Example
+<!-- We have to change our `dcohen` function a bit: -->
 
-```{r echo = FALSE}
-dcohen = function(group1, group2) { # Arguments
-  mean_1 = mean(group1) ; mean_2 = mean(group2)
-  var_1 = var(group1) ; var_2 = var(group2) # body
-  d = (mean_1 - mean_2)/sqrt(((var_1 + var_2)/2) )
-  dvalue = list(d = d)
-  class(dvalue) = "cohend"
-  return(dvalue) # results
-}
-print.cohen <- function(obj){
-  cat("\nMy Cohen's d\n\n")
-  cat("Effect size: ", obj$d, "\n")
-  invisible(obj) # return the object
-}
-```
+<!-- ```{r eval = FALSE} -->
+<!-- dcohen = function(group1, group2) { # Arguments -->
+<!--   ... -->
+<!--   dvalue = list(d = d) -->
+<!--   class(dvalue) = "cohend" -->
+<!--   return(dvalue) # results -->
+<!-- } -->
+<!-- ``` -->
 
+<!-- ## Example -->
 
-Compute the Cohen's *d* between a test group and a control group:
+<!-- ```{r echo = FALSE} -->
+<!-- dcohen = function(group1, group2) { # Arguments -->
+<!--   mean_1 = mean(group1) ; mean_2 = mean(group2) -->
+<!--   var_1 = var(group1) ; var_2 = var(group2) # body -->
+<!--   d = (mean_1 - mean_2)/sqrt(((var_1 + var_2)/2) ) -->
+<!--   dvalue = list(d = d) -->
+<!--   class(dvalue) = "cohend" -->
+<!--   return(dvalue) # results -->
+<!-- } -->
+<!-- print.cohen <- function(obj){ -->
+<!--   cat("\nMy Cohen's d\n\n") -->
+<!--   cat("Effect size: ", obj$d, "\n") -->
+<!--   invisible(obj) # return the object -->
+<!-- } -->
+<!-- ``` -->
 
-```{r}
-set.seed(082022) # results equal for everyone
-data <- data.frame(drug = rnorm(6, 10),
-                   placebo = rnorm(6, 2))
-my_d = dcohen(data$drug, data$placebo)
-print.cohen(my_d)
-```
 
+<!-- Compute the Cohen's *d* between a test group and a control group: -->
 
-## Debugging
+<!-- ```{r} -->
+<!-- set.seed(082022) # results equal for everyone -->
+<!-- data <- data.frame(drug = rnorm(6, 10), -->
+<!--                    placebo = rnorm(6, 2)) -->
+<!-- my_d = dcohen(data$drug, data$placebo) -->
+<!-- print.cohen(my_d) -->
+<!-- ``` -->
 
-Use the `traceback()` function:
 
-```{r eval=FALSE}
-foo <- function(x) { print(1); bar(2) }
-bar <- function(x) { x + a.variable.which.does.not.exist }
-```
+<!-- ## Debugging -->
 
-Call `foo()` and...
+<!-- Use the `traceback()` function: -->
 
-```{r eval = FALSE}
-foo() #
-[1] 1
-Error: object ’a.variable.which.does.not.exist’ not found
-```
+<!-- ```{r eval=FALSE} -->
+<!-- foo <- function(x) { print(1); bar(2) } -->
+<!-- bar <- function(x) { x + a.variable.which.does.not.exist } -->
+<!-- ``` -->
 
+<!-- Call `foo()` and... -->
 
-##
+<!-- ```{r eval = FALSE} -->
+<!-- foo() # -->
+<!-- [1] 1 -->
+<!-- Error: object ’a.variable.which.does.not.exist’ not found -->
+<!-- ``` -->
 
-Use `traceback()`:
 
-```{r eval=FALSE}
-traceback() # find out where the error occurred
-2: bar(2)
-1: foo()
-```
+<!-- ## -->
 
-Note: `traceback()` appears as default
+<!-- Use `traceback()`: -->
 
+<!-- ```{r eval=FALSE} -->
+<!-- traceback() # find out where the error occurred -->
+<!-- 2: bar(2) -->
+<!-- 1: foo() -->
+<!-- ``` -->
 
+<!-- Note: `traceback()` appears as default -->
 
-# Graphics
 
-##
 
-- Traditional graphics
-- Grid graphics \& `ggplot2`
+<!-- # Graphics -->
 
-For both:
+<!-- ## -->
 
-- High level functions $\rightarrow$ actually produce the plot
-- Low level functions $\rightarrow$ make it looks better =)
+<!-- - Traditional graphics -->
+<!-- - Grid graphics \& `ggplot2` -->
 
-## Export graphics file
+<!-- For both: -->
 
+<!-- - High level functions $\rightarrow$ actually produce the plot -->
+<!-- - Low level functions $\rightarrow$ make it looks better =) -->
 
-```{r eval = F}
-postscript()  # vector graphics
-pdf()
+<!-- ## Export graphics file -->
 
-png()          # bitmap graphics
-tiff()
-jpeg()
-bmp()
-```
 
+<!-- ```{r eval = F} -->
+<!-- postscript()  # vector graphics -->
+<!-- pdf() -->
 
-Remember to run off the graphic device once you've saved the graph:
+<!-- png()          # bitmap graphics -->
+<!-- tiff() -->
+<!-- jpeg() -->
+<!-- bmp() -->
+<!-- ``` -->
 
-```{r eval=FALSE}
-dev.off()
-```
 
-(You can do it also manually)
+<!-- Remember to run off the graphic device once you've saved the graph: -->
 
-## Traditional graphics I
+<!-- ```{r eval=FALSE} -->
+<!-- dev.off() -->
+<!-- ``` -->
 
-High level functions
+<!-- (You can do it also manually) -->
 
-```{r eval = FALSE}
-plot()      # scatter plot, specialized plot methods
-boxplot()
-hist()      # histogram
-qqnorm()    # quantile-quantile plot
-barplot()
-pie()       # pie chart
-pairs()     # scatter plot matrix
-persp()     # 3d plot
-contour()   # contour plot
-coplot()    # conditional plot
-interaction.plot()
-```
+<!-- ## Traditional graphics I -->
 
+<!-- High level functions -->
 
-`demo(graphics)` for a guided tour of base graphics!
+<!-- ```{r eval = FALSE} -->
+<!-- plot()      # scatter plot, specialized plot methods -->
+<!-- boxplot() -->
+<!-- hist()      # histogram -->
+<!-- qqnorm()    # quantile-quantile plot -->
+<!-- barplot() -->
+<!-- pie()       # pie chart -->
+<!-- pairs()     # scatter plot matrix -->
+<!-- persp()     # 3d plot -->
+<!-- contour()   # contour plot -->
+<!-- coplot()    # conditional plot -->
+<!-- interaction.plot() -->
+<!-- ``` -->
 
-## Traditional graphics II
 
-Low level functions
+<!-- `demo(graphics)` for a guided tour of base graphics! -->
 
-```{r eval = FALSE}
-points()       # add points
-lines()        # add lines
-rect()
-polygon()
-abline()       # add line with intercept a, slope b
-arrows()
-text()         # add text in plotting region
-mtext()        # add text in margins region
-axis()         # customize axes
-box()          # box around plot
-legend()
-```
+<!-- ## Traditional graphics II -->
 
-## Plot layout
+<!-- Low level functions -->
 
-Each plot is composed of two regions:
+<!-- ```{r eval = FALSE} -->
+<!-- points()       # add points -->
+<!-- lines()        # add lines -->
+<!-- rect() -->
+<!-- polygon() -->
+<!-- abline()       # add line with intercept a, slope b -->
+<!-- arrows() -->
+<!-- text()         # add text in plotting region -->
+<!-- mtext()        # add text in margins region -->
+<!-- axis()         # customize axes -->
+<!-- box()          # box around plot -->
+<!-- legend() -->
+<!-- ``` -->
 
-- The plotting regions (contains the actual plot)
-- The margins region (contain axes and labels)
+<!-- ## Plot layout -->
 
-A scatter plot:
+<!-- Each plot is composed of two regions: -->
 
-```{r eval = FALSE}
-x <- runif(50, 0, 2) # 50 uniform random numbers
-y <- runif(50, 0, 2)
-plot(x, y, main="Title",
-     sub="Subtitle", xlab="x-label",
-     ylab="y-label") # produce plotting window
-```
+<!-- - The plotting regions (contains the actual plot) -->
+<!-- - The margins region (contain axes and labels) -->
 
-Now add some text:
+<!-- A scatter plot: -->
 
+<!-- ```{r eval = FALSE} -->
+<!-- x <- runif(50, 0, 2) # 50 uniform random numbers -->
+<!-- y <- runif(50, 0, 2) -->
+<!-- plot(x, y, main="Title", -->
+<!--      sub="Subtitle", xlab="x-label", -->
+<!--      ylab="y-label") # produce plotting window -->
+<!-- ``` -->
 
+<!-- Now add some text: -->
 
-```{r eval = FALSE}
-text(0.6, 0.6, "Text at (0.6, 0.6)")
-abline(h=.6, v=.6, lty=2) # horizont. and vertic.
-                          # lines
-```
 
-## Margins region
 
-\small
+<!-- ```{r eval = FALSE} -->
+<!-- text(0.6, 0.6, "Text at (0.6, 0.6)") -->
+<!-- abline(h=.6, v=.6, lty=2) # horizont. and vertic. -->
+<!--                           # lines -->
+<!-- ``` -->
 
-```{r eval=TRUE, echo=FALSE, out.width="100%"}
-x <- runif(50, 0, 2) # 50 uniform random numbers
-y <- runif(50, 0, 2)
-plot(x, y, main="Title",
-     sub="Subtitle", xlab="x-label",
-     ylab="y-label", cex.lab=1.5) # produce plotting window
-text(0.6, 0.6, "Text at (0.6, 0.6)")
-abline(h=.6, v=.6, lty=2) # horiz. and vert. lines
+<!-- ## Margins region -->
 
-for(side in 1:4) mtext(-1:4, side=side, at=.7, line=-1:4)
-mtext(paste("Side", 1:4), side=1:4, line=-1, font=2)
-```
-## Rome wasn't built in a day  \small and neither your graph
+<!-- \small -->
 
-Display the interaction between the two factors of a two-factorial experiment:
+<!-- ```{r eval=TRUE, echo=FALSE, out.width="100%"} -->
+<!-- x <- runif(50, 0, 2) # 50 uniform random numbers -->
+<!-- y <- runif(50, 0, 2) -->
+<!-- plot(x, y, main="Title", -->
+<!--      sub="Subtitle", xlab="x-label", -->
+<!--      ylab="y-label", cex.lab=1.5) # produce plotting window -->
+<!-- text(0.6, 0.6, "Text at (0.6, 0.6)") -->
+<!-- abline(h=.6, v=.6, lty=2) # horiz. and vert. lines -->
 
-```{r eval=T}
-dat <- read.table(header=TRUE, text="
-A B rt
-a1 b1 825
-a1 b2 792
-a1 b3 840
-a2 b1 997
-a2 b2 902
-a2 b3 786
-")
-```
+<!-- for(side in 1:4) mtext(-1:4, side=side, at=.7, line=-1:4) -->
+<!-- mtext(paste("Side", 1:4), side=1:4, line=-1, font=2) -->
+<!-- ``` -->
+<!-- ## Rome wasn't built in a day  \small and neither your graph -->
 
-Force `A` and `B` to be `factor`:
+<!-- Display the interaction between the two factors of a two-factorial experiment: -->
 
-```{r eval =TRUE}
-dat[,1:2] = lapply(dat[,1:2], as.factor)
-```
+<!-- ```{r eval=T} -->
+<!-- dat <- read.table(header=TRUE, text=" -->
+<!-- A B rt -->
+<!-- a1 b1 825 -->
+<!-- a1 b2 792 -->
+<!-- a1 b3 840 -->
+<!-- a2 b1 997 -->
+<!-- a2 b2 902 -->
+<!-- a2 b3 786 -->
+<!-- ") -->
+<!-- ``` -->
 
-## First: The plot
-\small
-```{r eval = TRUE, out.width="80%"}
-plot(rt ~ as.numeric(B), dat, type="n", axes=FALSE,
-     xlim=c(.8, 3.2), ylim=c(750, 1000),
-     xlab="Difficulty", ylab="Mean reaction time (ms)")
-```
+<!-- Force `A` and `B` to be `factor`: -->
 
-This will not result in anything! Well, it will just produce the container of the plot
+<!-- ```{r eval =TRUE} -->
+<!-- dat[,1:2] = lapply(dat[,1:2], as.factor) -->
+<!-- ``` -->
 
-## Populate the content
+<!-- ## First: The plot -->
+<!-- \small -->
+<!-- ```{r eval = TRUE, out.width="80%"} -->
+<!-- plot(rt ~ as.numeric(B), dat, type="n", axes=FALSE, -->
+<!--      xlim=c(.8, 3.2), ylim=c(750, 1000), -->
+<!--      xlab="Difficulty", ylab="Mean reaction time (ms)") -->
+<!-- ``` -->
 
-Plot the data points separately for each level of factor `A`.
+<!-- This will not result in anything! Well, it will just produce the container of the plot -->
 
-```{r eval=FALSE}
-points(rt ~ as.numeric(B), dat[dat$A=="a1",],
-       type="b", pch=16)
-points(rt ~ as.numeric(B), dat[dat$A=="a2",],
-       type="b", pch=4)
+<!-- ## Populate the content -->
 
-```
+<!-- Plot the data points separately for each level of factor `A`. -->
 
-Add axes and a legend.
+<!-- ```{r eval=FALSE} -->
+<!-- points(rt ~ as.numeric(B), dat[dat$A=="a1",], -->
+<!--        type="b", pch=16) -->
+<!-- points(rt ~ as.numeric(B), dat[dat$A=="a2",], -->
+<!--        type="b", pch=4) -->
 
-```{r eval=FALSE}
-axis(side=1, at=1:3, expression(B[1], B[2], B[3]))
-axis(side=2)
-legend(2.5, 975, expression(A[1], A[2]), pch=c(16, 4),
-       bty="n", title="Task")
-```
+<!-- ``` -->
 
+<!-- Add axes and a legend. -->
 
-## Final result
+<!-- ```{r eval=FALSE} -->
+<!-- axis(side=1, at=1:3, expression(B[1], B[2], B[3])) -->
+<!-- axis(side=2) -->
+<!-- legend(2.5, 975, expression(A[1], A[2]), pch=c(16, 4), -->
+<!--        bty="n", title="Task") -->
+<!-- ``` -->
 
-::: columns
 
-:::: column
-```{r echo=FALSE, out.width="100%"}
-plot(rt ~ as.numeric(B), dat, type="n", axes=FALSE,
-     xlim=c(.8, 3.2), ylim=c(750, 1000),
-     xlab="Difficulty", ylab="Mean reaction time (ms)",
-     cex.lab=1.5)
-points(rt ~ as.numeric(B), dat[dat$A=="a1",],
-       type="b", pch=16)
-points(rt ~ as.numeric(B), dat[dat$A=="a2",],
-       type="b", pch=4)
-axis(side=1, at=1:3, expression(B[1], B[2], B[3]))
-axis(side=2)
-legend(2.5, 975, expression(A[1], A[2]), pch=c(16, 4),
-       bty="n", title="Task")
+<!-- ## Final result -->
 
-```
+<!-- ::: columns -->
 
-::::
+<!-- :::: column -->
+<!-- ```{r echo=FALSE, out.width="100%"} -->
+<!-- plot(rt ~ as.numeric(B), dat, type="n", axes=FALSE, -->
+<!--      xlim=c(.8, 3.2), ylim=c(750, 1000), -->
+<!--      xlab="Difficulty", ylab="Mean reaction time (ms)", -->
+<!--      cex.lab=1.5) -->
+<!-- points(rt ~ as.numeric(B), dat[dat$A=="a1",], -->
+<!--        type="b", pch=16) -->
+<!-- points(rt ~ as.numeric(B), dat[dat$A=="a2",], -->
+<!--        type="b", pch=4) -->
+<!-- axis(side=1, at=1:3, expression(B[1], B[2], B[3])) -->
+<!-- axis(side=2) -->
+<!-- legend(2.5, 975, expression(A[1], A[2]), pch=c(16, 4), -->
+<!--        bty="n", title="Task") -->
 
-:::: column
-- Error bars may be added
-using the `arrows()`
-function.
+<!-- ``` -->
 
-- Via `par()` many graphical
-parameters may be set
-(see `?par`), for example
-`par(mgp=c(2, .7, 0))`
-reduces the distance
-between labels and axes
-::::
+<!-- :::: -->
 
-:::
+<!-- :::: column -->
+<!-- - Error bars may be added -->
+<!-- using the `arrows()` -->
+<!-- function. -->
 
+<!-- - Via `par()` many graphical -->
+<!-- parameters may be set -->
+<!-- (see `?par`), for example -->
+<!-- `par(mgp=c(2, .7, 0))` -->
+<!-- reduces the distance -->
+<!-- between labels and axes -->
+<!-- :::: -->
 
-## Graphical parameters I
+<!-- ::: -->
 
-```{r eval=FALSE}
-adj # justification of text
-bty # box type for legend
-cex # size of text or data symbols (multiplier)
-col # color, see colors()
-las # rotation of text in margins
-lty # line type (solid, dashed, dotted, ...)
-lwd # line width
-mpg # placement of axis ticks and tick labels
-pch # data symbol type
-tck # length of axis ticks
-type # type of plot (points, lines, both, none)
-```
 
-## Graphical parameters II
+<!-- ## Graphical parameters I -->
 
+<!-- ```{r eval=FALSE} -->
+<!-- adj # justification of text -->
+<!-- bty # box type for legend -->
+<!-- cex # size of text or data symbols (multiplier) -->
+<!-- col # color, see colors() -->
+<!-- las # rotation of text in margins -->
+<!-- lty # line type (solid, dashed, dotted, ...) -->
+<!-- lwd # line width -->
+<!-- mpg # placement of axis ticks and tick labels -->
+<!-- pch # data symbol type -->
+<!-- tck # length of axis ticks -->
+<!-- type # type of plot (points, lines, both, none) -->
+<!-- ``` -->
 
-`par()`
+<!-- ## Graphical parameters II -->
 
-```{r eval =FALSE}
 
-mai # size of figure margins (inches)
-mar # size of figure margins (lines of text)
-mfrow # number of sub-figures on a page:
-      # par(mfrow=c(1, 2)) creates two sub-figures
-oma # size of outer margins (lines of text)
-omi # size of outer margins (inches)
-pty # aspect ratio of plot region (square, maximal)
-```
+<!-- `par()` -->
 
+<!-- ```{r eval =FALSE} -->
 
+<!-- mai # size of figure margins (inches) -->
+<!-- mar # size of figure margins (lines of text) -->
+<!-- mfrow # number of sub-figures on a page: -->
+<!--       # par(mfrow=c(1, 2)) creates two sub-figures -->
+<!-- oma # size of outer margins (lines of text) -->
+<!-- omi # size of outer margins (inches) -->
+<!-- pty # aspect ratio of plot region (square, maximal) -->
+<!-- ``` -->
 
-## `ggplot2`
 
-\small
 
-`ggplot2` (Grammar of Graphics plot, Wickman, 2016) is one of the best packages for plotting raw data and results:
+<!-- ## `ggplot2` -->
 
-```{r eval=FALSE}
-install.packages("ggplot2") ; library(ggplot2)
-```
+<!-- \small -->
 
-The code for the previous plot:
+<!-- `ggplot2` (Grammar of Graphics plot, Wickman, 2016) is one of the best packages for plotting raw data and results: -->
 
-```{r eval = FALSE}
-ggplot(dat, aes(x = B, y = rt, group = A)) +
-  geom_point(pch=dat$A, size = 5) +
-  geom_line(aes(linetype=A), size=1)  + theme_classic() +
-  ylab("RT") +  scale_linetype_manual("Task", values =c(3,4),
-                                labels = c("A1", "A2")) +
-  scale_x_discrete(labels = c("B1", "B2", "B3")) +
-  theme(legend.position="top",
-        panel.background =  element_rect(fill = "#FAFAFA",
-                                         colour = "#FAFAFA"),
-        plot.background = element_rect(fill = "#FAFAFA"),
-        legend.key = element_rect(fill = "#FAFAFA"))
-```
+<!-- ```{r eval=FALSE} -->
+<!-- install.packages("ggplot2") ; library(ggplot2) -->
+<!-- ``` -->
 
-##
+<!-- The code for the previous plot: -->
 
-```{r eval = TRUE, out.with="100%", echo=FALSE}
-ggplot(dat, aes(x = B, y = rt, group = A)) +
-  geom_point(pch=dat$A, size = 5) +
-  geom_line(aes(linetype=A), size=1)  + theme_classic() +
-  ylab("RT") +  scale_linetype_manual("Task", values =c(3,4),
-                                labels = c("A1", "A2")) +
-  scale_x_discrete(labels = c("B1", "B2", "B3")) +
-  theme(legend.position="top",
-        panel.background =  element_rect(fill = "#FAFAFA",
-                                         colour = "#FAFAFA"),
-        plot.background = element_rect(fill = "#FAFAFA"),
-        legend.key = element_rect(fill = "#FAFAFA"))
-```
+<!-- ```{r eval = FALSE} -->
+<!-- ggplot(dat, aes(x = B, y = rt, group = A)) + -->
+<!--   geom_point(pch=dat$A, size = 5) + -->
+<!--   geom_line(aes(linetype=A), size=1)  + theme_classic() + -->
+<!--   ylab("RT") +  scale_linetype_manual("Task", values =c(3,4), -->
+<!--                                 labels = c("A1", "A2")) + -->
+<!--   scale_x_discrete(labels = c("B1", "B2", "B3")) + -->
+<!--   theme(legend.position="top", -->
+<!--         panel.background =  element_rect(fill = "#FAFAFA", -->
+<!--                                          colour = "#FAFAFA"), -->
+<!--         plot.background = element_rect(fill = "#FAFAFA"), -->
+<!--         legend.key = element_rect(fill = "#FAFAFA")) -->
+<!-- ``` -->
 
+<!-- ## -->
 
-## Raw data
+<!-- ```{r eval = TRUE, out.with="100%", echo=FALSE} -->
+<!-- ggplot(dat, aes(x = B, y = rt, group = A)) + -->
+<!--   geom_point(pch=dat$A, size = 5) + -->
+<!--   geom_line(aes(linetype=A), size=1)  + theme_classic() + -->
+<!--   ylab("RT") +  scale_linetype_manual("Task", values =c(3,4), -->
+<!--                                 labels = c("A1", "A2")) + -->
+<!--   scale_x_discrete(labels = c("B1", "B2", "B3")) + -->
+<!--   theme(legend.position="top", -->
+<!--         panel.background =  element_rect(fill = "#FAFAFA", -->
+<!--                                          colour = "#FAFAFA"), -->
+<!--         plot.background = element_rect(fill = "#FAFAFA"), -->
+<!--         legend.key = element_rect(fill = "#FAFAFA")) -->
+<!-- ``` -->
 
-```{r out.width="50%"}
-ggplot(rock,
-       aes(y=peri,x=shape, color =shape,
-           size = peri)) + geom_point() +
-  theme_bw() + theme(legend.position = "none")
-```
 
+<!-- ## Raw data -->
 
-## Linear model
+<!-- ```{r out.width="50%"} -->
+<!-- ggplot(rock, -->
+<!--        aes(y=peri,x=shape, color =shape, -->
+<!--            size = peri)) + geom_point() + -->
+<!--   theme_bw() + theme(legend.position = "none") -->
+<!-- ``` -->
 
-```{r, message=FALSE, warning=FALSE, out.width="50%"}
-ggplot(rock,
-       aes(y=peri,x=shape, color =shape,
-           size = peri)) + geom_point() +
-  theme_bw() + theme(legend.position = "none") +
-  geom_smooth(method="lm")
 
-```
+<!-- ## Linear model -->
 
-## Multi Panel
+<!-- ```{r, message=FALSE, warning=FALSE, out.width="50%"} -->
+<!-- ggplot(rock, -->
+<!--        aes(y=peri,x=shape, color =shape, -->
+<!--            size = peri)) + geom_point() + -->
+<!--   theme_bw() + theme(legend.position = "none") + -->
+<!--   geom_smooth(method="lm") -->
 
-```{r echo = FALSE, out.width="80%"}
-states = data.frame(state.x77, state.name = state.name,
-state.region = state.region)
+<!-- ``` -->
 
-ggplot(states,
-       aes(x = Population, y = Murder,
-           size = Illiteracy)) + geom_point() +
-  facet_wrap(~state.region) + theme_bw()
-```
-## Multi panel code
+<!-- ## Multi Panel -->
 
-```{r eval=FALSE}
-states = data.frame(state.x77, state.name = state.name,
-                    state.region = state.region)
+<!-- ```{r echo = FALSE, out.width="80%"} -->
+<!-- states = data.frame(state.x77, state.name = state.name, -->
+<!-- state.region = state.region) -->
 
-ggplot(states,
-       aes(x = Population, y = Murder,
-           size = Illiteracy)) + geom_point() +
-  facet_wrap(~state.region) + theme_bw()
-```
+<!-- ggplot(states, -->
+<!--        aes(x = Population, y = Murder, -->
+<!--            size = Illiteracy)) + geom_point() + -->
+<!--   facet_wrap(~state.region) + theme_bw() -->
+<!-- ``` -->
+<!-- ## Multi panel code -->
 
+<!-- ```{r eval=FALSE} -->
+<!-- states = data.frame(state.x77, state.name = state.name, -->
+<!--                     state.region = state.region) -->
 
-## Different plots in the same panel
+<!-- ggplot(states, -->
+<!--        aes(x = Population, y = Murder, -->
+<!--            size = Illiteracy)) + geom_point() + -->
+<!--   facet_wrap(~state.region) + theme_bw() -->
+<!-- ``` -->
 
-\small
 
-use `grid.arrange()` function from the `gridExtra` package:
+<!-- ## Different plots in the same panel -->
 
-```{r eval = FALSE}
-install.packages("grideExtra") ; library(gridExtra)
-```
+<!-- \small -->
 
+<!-- use `grid.arrange()` function from the `gridExtra` package: -->
 
-```{r eval = FALSE}
-murder_raw = ggplot(states,  # raw data
-               aes(x = Illiteracy, y = Murder)) +
-           .....
+<!-- ```{r eval = FALSE} -->
+<!-- install.packages("grideExtra") ; library(gridExtra) -->
+<!-- ``` -->
 
-murder_lm = ggplot(states,  # lm
-               aes(x = Illiteracy, y = Murder)) +
-           .....
 
-```
+<!-- ```{r eval = FALSE} -->
+<!-- murder_raw = ggplot(states,  # raw data -->
+<!--                aes(x = Illiteracy, y = Murder)) + -->
+<!--            ..... -->
 
-Combine the plots together:
+<!-- murder_lm = ggplot(states,  # lm -->
+<!--                aes(x = Illiteracy, y = Murder)) + -->
+<!--            ..... -->
 
-```{r eval = FALSE}
-grid.arrange(murder_raw, murder_lm,
-             nrow=1) # plots forced to be the same row
-```
+<!-- ``` -->
 
+<!-- Combine the plots together: -->
 
+<!-- ```{r eval = FALSE} -->
+<!-- grid.arrange(murder_raw, murder_lm, -->
+<!--              nrow=1) # plots forced to be the same row -->
+<!-- ``` -->
 
-## Combine the plots together
-\small
 
-```{r echo = FALSE}
 
-murder_raw = ggplot(states,  # raw data
-               aes(x = Illiteracy, y = Murder)) + geom_point(size =3, pch=3) + theme_classic() + theme(legend.position = "none")
+<!-- ## Combine the plots together -->
+<!-- \small -->
 
-murder_lm = ggplot(states,  # raw data
-               aes(x = Illiteracy, y = Murder)) + geom_point(size =3, pch=3) + theme_classic() +
-  geom_smooth(method="lm", color="red", aes(fill="red")) + theme(legend.position = "none")
-```
+<!-- ```{r echo = FALSE} -->
 
+<!-- murder_raw = ggplot(states,  # raw data -->
+<!--                aes(x = Illiteracy, y = Murder)) + geom_point(size =3, pch=3) + theme_classic() + theme(legend.position = "none") -->
 
-```{r echo = FALSE}
-grid.arrange(murder_raw, murder_lm,
-             nrow=1)
-```
+<!-- murder_lm = ggplot(states,  # raw data -->
+<!--                aes(x = Illiteracy, y = Murder)) + geom_point(size =3, pch=3) + theme_classic() + -->
+<!--   geom_smooth(method="lm", color="red", aes(fill="red")) + theme(legend.position = "none") -->
+<!-- ``` -->
 
 
-# `R` for statistical computing
+<!-- ```{r echo = FALSE} -->
+<!-- grid.arrange(murder_raw, murder_lm, -->
+<!--              nrow=1) -->
+<!-- ``` -->
 
-##
 
-The `stats` package (built-in package in `R`) contains function for statistical calculations and random number generator
+<!-- # `R` for statistical computing -->
 
-see `library(help=stats)`
+<!-- ## -->
 
-# Classical hypothesis testing in R
+<!-- The `stats` package (built-in package in `R`) contains function for statistical calculations and random number generator -->
 
-##
+<!-- see `library(help=stats)` -->
 
-Nominal data:
+<!-- # Classical hypothesis testing in R -->
 
-- `binom.test()`: exact test of a simple null
-hypothesis about the probability of success in a Bernoulli experiment
+<!-- ## -->
 
-- `chisq.test()`: contingency table  $\chi^2$ tests
+<!-- Nominal data: -->
 
-Metric response variable:
+<!-- - `binom.test()`: exact test of a simple null -->
+<!-- hypothesis about the probability of success in a Bernoulli experiment -->
 
-- `cor.test()`: association between paired samples
-- `t.test()`: one- and two-sample *t* tests (also for paired data)
-- `var.test()`: $F$ for testing the homogeneity of variances
+<!-- - `chisq.test()`: contingency table  $\chi^2$ tests -->
 
-## What is the *p*-value?
+<!-- Metric response variable: -->
 
-*p*-value:
+<!-- - `cor.test()`: association between paired samples -->
+<!-- - `t.test()`: one- and two-sample *t* tests (also for paired data) -->
+<!-- - `var.test()`: $F$ for testing the homogeneity of variances -->
 
->conditional probability of obtaining a test stastic that is at least as extreme as the one observed, given that the null hyphothesis is true
+<!-- ## What is the *p*-value? -->
 
-If $p < \alpha$ (i.e., the probability of rejecting the null hypothesis when it is true) $\rightarrow$ the null hypothesis is rejected
+<!-- *p*-value: -->
 
-```{r echo=FALSE, out.width="50%"}
-curve(dnorm(x,0,1),xlim=c(-4,4),
-      bty = "n", xlab = "Value of test statistic", xaxt="n",
-      yaxt="n", ylab = "Density of the sampling distribution", lwd =2)
-Axis(side=1, labels=FALSE, cex.axis = 1.5, padj = -1)
-abline(v = -1.96, lty=2)
-abline(v = 1.96, lty=2)
+<!-- >conditional probability of obtaining a test stastic that is at least as extreme as the one observed, given that the null hyphothesis is true -->
 
-text(expression(alpha/2), x = -2.8, y = 0.15, cex = 2)
-text(expression(alpha/2), x = 2.8, y = 0.15, cex = 2)
-text(expression(paste("1 - ", alpha)), x = -0.0, y = 0.15, cex = 2)
+<!-- If $p < \alpha$ (i.e., the probability of rejecting the null hypothesis when it is true) $\rightarrow$ the null hypothesis is rejected -->
 
-```
+<!-- ```{r echo=FALSE, out.width="50%"} -->
+<!-- curve(dnorm(x,0,1),xlim=c(-4,4), -->
+<!--       bty = "n", xlab = "Value of test statistic", xaxt="n", -->
+<!--       yaxt="n", ylab = "Density of the sampling distribution", lwd =2) -->
+<!-- Axis(side=1, labels=FALSE, cex.axis = 1.5, padj = -1) -->
+<!-- abline(v = -1.96, lty=2) -->
+<!-- abline(v = 1.96, lty=2) -->
 
+<!-- text(expression(alpha/2), x = -2.8, y = 0.15, cex = 2) -->
+<!-- text(expression(alpha/2), x = 2.8, y = 0.15, cex = 2) -->
+<!-- text(expression(paste("1 - ", alpha)), x = -0.0, y = 0.15, cex = 2) -->
 
-## Binomial test
+<!-- ``` -->
 
-Observations $X_i$ **must** be independent
 
-Hypotheses:
+<!-- ## Binomial test -->
 
-1. $H_0$: $p = p_0$ &nbsp; $H_1$: $p \neq p_0$
-2. $H_0$: $p = p_0$ &nbsp; $H_1$: $p < p_0$
-3. $H_0$: $p = p_0$ &nbsp; $H_1$: $p > p_0$
+<!-- Observations $X_i$ **must** be independent -->
 
-Test statistic:
+<!-- Hypotheses: -->
 
-$$T = \displaystyle \sum_{i=1}^{n}X_i, \, \, \, T \sim \mathcal{B}(n, p_0)$$
-In `R`:
+<!-- 1. $H_0$: $p = p_0$ &nbsp; $H_1$: $p \neq p_0$ -->
+<!-- 2. $H_0$: $p = p_0$ &nbsp; $H_1$: $p < p_0$ -->
+<!-- 3. $H_0$: $p = p_0$ &nbsp; $H_1$: $p > p_0$ -->
 
-```{r eval = FALSE}
-binom.test(5, 10, p = 0.25)
-```
+<!-- Test statistic: -->
 
-## $\chi^2$ test
+<!-- $$T = \displaystyle \sum_{i=1}^{n}X_i, \, \, \, T \sim \mathcal{B}(n, p_0)$$ -->
+<!-- In `R`: -->
 
-Independence of observations
+<!-- ```{r eval = FALSE} -->
+<!-- binom.test(5, 10, p = 0.25) -->
+<!-- ``` -->
 
-Hypothesis:
+<!-- ## $\chi^2$ test -->
 
-- $H_0$: $P(X_{ij} = k) = p_k$ for all $i=1, \ldots, r$ and $j=1, \ldots, c$
+<!-- Independence of observations -->
 
-- $H_0$: $P(X_{ij} = k) \neq P(X_{i'j} = k)$ for *at least* one $i \in \{1, \ldots, r\}$ and $j \in \{1, \ldots, c\}$
+<!-- Hypothesis: -->
 
-Test statistic:
+<!-- - $H_0$: $P(X_{ij} = k) = p_k$ for all $i=1, \ldots, r$ and $j=1, \ldots, c$ -->
 
-$$\chi^2 = \displaystyle \sum_{i=1}^{n}\frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}}, \, \, \chi^2 \sim \chi^2(r-1)(c-1)$$
+<!-- - $H_0$: $P(X_{ij} = k) \neq P(X_{i'j} = k)$ for *at least* one $i \in \{1, \ldots, r\}$ and $j \in \{1, \ldots, c\}$ -->
 
-In `R`:
+<!-- Test statistic: -->
 
-```{r eval=FALSE}
-tab <- xtabs(~ education + induced, infert)
-chisq.test(tab)
-```
+<!-- $$\chi^2 = \displaystyle \sum_{i=1}^{n}\frac{(x_{ij} - \hat{x}_{ij})^2}{\hat{x}_{ij}}, \, \, \chi^2 \sim \chi^2(r-1)(c-1)$$ -->
 
+<!-- In `R`: -->
 
-## Correlation test
+<!-- ```{r eval=FALSE} -->
+<!-- tab <- xtabs(~ education + induced, infert) -->
+<!-- chisq.test(tab) -->
+<!-- ``` -->
 
-Hypothesis:
 
-- $H_0$: $\rho_{XY} = 0$, $H_1$: $\rho_{xy} \neq 0$
-- $H_0$: $\rho_{XY} = 0$, $H_1$: $\rho_{xy} < 0$
-- $H_0$: $\rho_{XY} = 0$, $H_1$: $\rho_{xy} >0$
+<!-- ## Correlation test -->
 
-Test statistic:
+<!-- Hypothesis: -->
 
-$$T = \frac{r_{xy}}{\sqrt{1-r_{xy}^2}}\sqrt{n-2}, \, \, T \sim t(n-2)$$
-In `R`:
+<!-- - $H_0$: $\rho_{XY} = 0$, $H_1$: $\rho_{xy} \neq 0$ -->
+<!-- - $H_0$: $\rho_{XY} = 0$, $H_1$: $\rho_{xy} < 0$ -->
+<!-- - $H_0$: $\rho_{XY} = 0$, $H_1$: $\rho_{xy} >0$ -->
 
-```{r eval=FALSE}
-cor.test(~ speed + dist, cars,
-         alternative = "two.sided")
-```
+<!-- Test statistic: -->
 
-## Two (indepdent) sample $t$ test
+<!-- $$T = \frac{r_{xy}}{\sqrt{1-r_{xy}^2}}\sqrt{n-2}, \, \, T \sim t(n-2)$$ -->
+<!-- In `R`: -->
 
-Independent samples from normally distributions where $\sigma^2$ are unknown but homogeneous
+<!-- ```{r eval=FALSE} -->
+<!-- cor.test(~ speed + dist, cars, -->
+<!--          alternative = "two.sided") -->
+<!-- ``` -->
 
-- $H_0$: $\mu_{x_1 - x_2} = 0$, $H_1$: $\mu_{x_1 - x_2} \neq 0$
-- $H_0$: $\mu_{x_1 - x_2} = 0$, $H_1$: $\mu_{x_1 - x_2} < 0$
-- $H_0$: $\mu_{x_1 - x_2} = 0$, $H_1$: $\mu_{x_1 - x_2} > 0$
+<!-- ## Two (indepdent) sample $t$ test -->
 
-Test statistic:
+<!-- Independent samples from normally distributions where $\sigma^2$ are unknown but homogeneous -->
 
-$$T = \frac{\bar{x_1} - \bar{x_2}}{\sigma_{\bar{x_1}-\bar{y_2}}}, \, \, T \sim t(n_1 + n_2 - 2)$$
+<!-- - $H_0$: $\mu_{x_1 - x_2} = 0$, $H_1$: $\mu_{x_1 - x_2} \neq 0$ -->
+<!-- - $H_0$: $\mu_{x_1 - x_2} = 0$, $H_1$: $\mu_{x_1 - x_2} < 0$ -->
+<!-- - $H_0$: $\mu_{x_1 - x_2} = 0$, $H_1$: $\mu_{x_1 - x_2} > 0$ -->
 
-`R` function:
+<!-- Test statistic: -->
 
-```{r eval=FALSE}
-t.test(len ~ supp, data = ToothGrowth,
-       var.equal = TRUE)
-```
+<!-- $$T = \frac{\bar{x_1} - \bar{x_2}}{\sigma_{\bar{x_1}-\bar{y_2}}}, \, \, T \sim t(n_1 + n_2 - 2)$$ -->
 
-## Two (depedent) sample $t$ test
+<!-- `R` function: -->
 
-Observations on the same sample
+<!-- ```{r eval=FALSE} -->
+<!-- t.test(len ~ supp, data = ToothGrowth, -->
+<!--        var.equal = TRUE) -->
+<!-- ``` -->
 
-Hypothesis:
+<!-- ## Two (depedent) sample $t$ test -->
 
-- $H_0$: $\mu_{D} = 0$, $H_1$: $\mu_{D} \neq 0$
-- $H_0$: $\mu_{D} = 0$, $H_1$: $\mu_{D} < 0$
-- $H_0$: $\mu_{D} = 0$, $H_1$: $\mu_{D} > 0$
+<!-- Observations on the same sample -->
 
-Test statistic:
+<!-- Hypothesis: -->
 
-$$T = \frac{d}{\sigma_{d}}, \, \, \, T \sim t(m-1)$$
+<!-- - $H_0$: $\mu_{D} = 0$, $H_1$: $\mu_{D} \neq 0$ -->
+<!-- - $H_0$: $\mu_{D} = 0$, $H_1$: $\mu_{D} < 0$ -->
+<!-- - $H_0$: $\mu_{D} = 0$, $H_1$: $\mu_{D} > 0$ -->
 
+<!-- Test statistic: -->
 
+<!-- $$T = \frac{d}{\sigma_{d}}, \, \, \, T \sim t(m-1)$$ -->
 
 
-`R` function:
 
-```{r eval=FALSE}
-with(sleep,
-     t.test(extra[group == 1],
-            extra[group == 2], paired = TRUE))
-```
 
-# Generalized Linear Models (GLMs)
+<!-- `R` function: -->
 
-## Formulae
+<!-- ```{r eval=FALSE} -->
+<!-- with(sleep, -->
+<!--      t.test(extra[group == 1], -->
+<!--             extra[group == 2], paired = TRUE)) -->
+<!-- ``` -->
 
-Statistical models are represented by formulae which are extremely close to the actual statistical notation:
+<!-- # Generalized Linear Models (GLMs) -->
 
-| in `R`               | Model                                                                                           |
-|----------------------|-------------------------------------------------------------------------------------------------|
-| `y ~ 1 + x`          |  $y_i   = \beta_0 + \beta_1 x_i + \varepsilon_i$                                                |
-| `y ~ x`              |  (same but short)                                                                               |
-| `y ~ 0 + x`          |  $y_i = \beta_1 x_i +   \varepsilon_i$                                                          |
-| `y ~ x_A * x_B`      |  $y_i = \beta_0 + \beta_1 x_i +   \beta_2 x_j + (\beta_1 \beta_2)x_{ij}    + \varepsilon_{ij}$  |
+<!-- ## Formulae -->
 
-## Linear models
+<!-- Statistical models are represented by formulae which are extremely close to the actual statistical notation: -->
 
-$$y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta_kx_k + \varepsilon$$
-In `R`:
+<!-- | in `R`               | Model                                                                                           | -->
+<!-- |----------------------|-------------------------------------------------------------------------------------------------| -->
+<!-- | `y ~ 1 + x`          |  $y_i   = \beta_0 + \beta_1 x_i + \varepsilon_i$                                                | -->
+<!-- | `y ~ x`              |  (same but short)                                                                               | -->
+<!-- | `y ~ 0 + x`          |  $y_i = \beta_1 x_i +   \varepsilon_i$                                                          | -->
+<!-- | `y ~ x_A * x_B`      |  $y_i = \beta_0 + \beta_1 x_i +   \beta_2 x_j + (\beta_1 \beta_2)x_{ij}    + \varepsilon_{ij}$  | -->
 
-```{r eval = FALSE}
-lm(y ~ x1 + x2 + ... + xk, data)
-```
+<!-- ## Linear models -->
 
-## Extractor functions I
+<!-- $$y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta_kx_k + \varepsilon$$ -->
+<!-- In `R`: -->
 
-```{r eval = FALSE}
-coef()    # Extract the regression coefficients
-summary() # Print a comprehensive summary of the results of
-          # the regression analysis
-anova()   # Compare nested models and produce an analysis
-resid()   # Extract the (matrix of) residuals
-plot()    # Produce four plots, showing residuals, fitted
-          # values and some diagnostics
-model.matrix()
-          # Return the design matrix
-```
+<!-- ```{r eval = FALSE} -->
+<!-- lm(y ~ x1 + x2 + ... + xk, data) -->
+<!-- ``` -->
 
-## Extractor functions II
+<!-- ## Extractor functions I -->
 
-```{r eval = FALSE}
-vcov()    # Return the variance-covariance matrix of the
-          # main parameters of a fitted model object
-predict() # A new data frame must be supplied having the
-          # same variables specified with the same labels
-          # as the original. The value is a vector or
-          # matrix of predicted values corresponding to
-          # the determining variable values in data frame
-step()    # Select a suitable model by adding or dropping
-          # terms and preserving hierarchies. The model
-          # with the smallest value of AIC (Akaike’s
-          # Information Criterion) discovered in the
-          # stepwise search is returned
-```
+<!-- ```{r eval = FALSE} -->
+<!-- coef()    # Extract the regression coefficients -->
+<!-- summary() # Print a comprehensive summary of the results of -->
+<!--           # the regression analysis -->
+<!-- anova()   # Compare nested models and produce an analysis -->
+<!-- resid()   # Extract the (matrix of) residuals -->
+<!-- plot()    # Produce four plots, showing residuals, fitted -->
+<!--           # values and some diagnostics -->
+<!-- model.matrix() -->
+<!--           # Return the design matrix -->
+<!-- ``` -->
 
+<!-- ## Extractor functions II -->
 
-## Generalized linear models
+<!-- ```{r eval = FALSE} -->
+<!-- vcov()    # Return the variance-covariance matrix of the -->
+<!--           # main parameters of a fitted model object -->
+<!-- predict() # A new data frame must be supplied having the -->
+<!--           # same variables specified with the same labels -->
+<!--           # as the original. The value is a vector or -->
+<!--           # matrix of predicted values corresponding to -->
+<!--           # the determining variable values in data frame -->
+<!-- step()    # Select a suitable model by adding or dropping -->
+<!--           # terms and preserving hierarchies. The model -->
+<!--           # with the smallest value of AIC (Akaike’s -->
+<!--           # Information Criterion) discovered in the -->
+<!--           # stepwise search is returned -->
+<!-- ``` -->
 
-$$g(\mu) = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta_kx_k + \varepsilon$$
-$g()$ is the link functions that connects the mean to the linear combination of predictors.
 
-A GLM is composed of three elements: The response distribution, the link function, and the linear combination of predictors
+<!-- ## Generalized linear models -->
 
-In `R`:
+<!-- $$g(\mu) = \beta_0 + \beta_1x_1 + \beta_2x_2 + \ldots + \beta_kx_k + \varepsilon$$ -->
+<!-- $g()$ is the link functions that connects the mean to the linear combination of predictors. -->
 
-```{r eval=FALSE}
-glm(y ~ x1 + x2 + ... + xk, family(link), data)
-```
+<!-- A GLM is composed of three elements: The response distribution, the link function, and the linear combination of predictors -->
 
-## LM vs GLM
+<!-- In `R`: -->
 
-::: columns
+<!-- ```{r eval=FALSE} -->
+<!-- glm(y ~ x1 + x2 + ... + xk, family(link), data) -->
+<!-- ``` -->
 
-:::: column
+<!-- ## LM vs GLM -->
 
-\centering
+<!-- ::: columns -->
 
-\color{template} GLM
+<!-- :::: column -->
 
+<!-- \centering -->
 
+<!-- \color{template} GLM -->
 
-```{r echo = FALSE, warning=FALSE, out.width="90%"}
-samples <- 500
-r <- 0.50
-r_neg <- -0.95
-library('MASS')
-data <- data.frame(mvrnorm(n=samples,
-                           mu=c(1, 1),
-                           Sigma=matrix(c(1, r, r, 1), nrow=2), empirical=TRUE))
-colnames(data) <- c("x", "y")
-data$z <- ifelse(data$y < 1, 0, 1)
-model_bin <- glm(z ~x, data = data, family = "binomial")
-model = lm(y ~ x, data = data)
 
-ggplot(data, aes(y=z, x = fitted.values(model_bin))) +
-  geom_point(size = 3, alpha = 0.6)  +
-  geom_smooth(method="glm",
-              method.args=list(family="binomial"),
-              color = "royalblue",
-              se=TRUE, fill = "lightblue") +
-  ylab(expression(paste("P"))) +
-  xlab(expression(paste("Linear combination of predictors"))) +
-  theme_minimal() +
-  theme(axis.ticks.y = element_blank(),
-        axis.title.x = element_text(size = 26),
-        axis.title.y = element_text(size = 26),
-        axis.text = element_text(size = 22),
-        panel.border = element_blank())
 
-```
-::::
+<!-- ```{r echo = FALSE, warning=FALSE, out.width="90%"} -->
+<!-- samples <- 500 -->
+<!-- r <- 0.50 -->
+<!-- r_neg <- -0.95 -->
+<!-- library('MASS') -->
+<!-- data <- data.frame(mvrnorm(n=samples, -->
+<!--                            mu=c(1, 1), -->
+<!--                            Sigma=matrix(c(1, r, r, 1), nrow=2), empirical=TRUE)) -->
+<!-- colnames(data) <- c("x", "y") -->
+<!-- data$z <- ifelse(data$y < 1, 0, 1) -->
+<!-- model_bin <- glm(z ~x, data = data, family = "binomial") -->
+<!-- model = lm(y ~ x, data = data) -->
 
-:::: column
+<!-- ggplot(data, aes(y=z, x = fitted.values(model_bin))) + -->
+<!--   geom_point(size = 3, alpha = 0.6)  + -->
+<!--   geom_smooth(method="glm", -->
+<!--               method.args=list(family="binomial"), -->
+<!--               color = "royalblue", -->
+<!--               se=TRUE, fill = "lightblue") + -->
+<!--   ylab(expression(paste("P"))) + -->
+<!--   xlab(expression(paste("Linear combination of predictors"))) + -->
+<!--   theme_minimal() + -->
+<!--   theme(axis.ticks.y = element_blank(), -->
+<!--         axis.title.x = element_text(size = 26), -->
+<!--         axis.title.y = element_text(size = 26), -->
+<!--         axis.text = element_text(size = 22), -->
+<!--         panel.border = element_blank()) -->
 
-\centering
-\color{template} LM
+<!-- ``` -->
+<!-- :::: -->
 
+<!-- :::: column -->
 
-```{r echo = FALSE, warning=FALSE, out.width="90%"}
-ggplot(data, aes(y=y, x = fitted.values(model))) +
-  geom_point(size = 3, alpha = 0.6)  +
-  geom_smooth(method="lm",
-              color = "royalblue",
-              se=TRUE, fill = "lightblue") +
-  ylab("y") +
-  xlab("x") +
-  theme_minimal() +
-  theme(axis.ticks.y = element_blank(),
-        axis.title = element_text(size = 26,  face="italic"),
-        axis.text = element_text(size = 22),
-        panel.border = element_blank())
-```
+<!-- \centering -->
+<!-- \color{template} LM -->
 
-::::
 
-:::
+<!-- ```{r echo = FALSE, warning=FALSE, out.width="90%"} -->
+<!-- ggplot(data, aes(y=y, x = fitted.values(model))) + -->
+<!--   geom_point(size = 3, alpha = 0.6)  + -->
+<!--   geom_smooth(method="lm", -->
+<!--               color = "royalblue", -->
+<!--               se=TRUE, fill = "lightblue") + -->
+<!--   ylab("y") + -->
+<!--   xlab("x") + -->
+<!--   theme_minimal() + -->
+<!--   theme(axis.ticks.y = element_blank(), -->
+<!--         axis.title = element_text(size = 26,  face="italic"), -->
+<!--         axis.text = element_text(size = 22), -->
+<!--         panel.border = element_blank()) -->
+<!-- ``` -->
 
+<!-- :::: -->
 
+<!-- ::: -->
 
 
 
-## Families
 
-A special link function to each response variable. In `R` some different link functions are available by default:
 
-```{r eval = FALSE}
-## Family name     Link functions
-binomial           logit, probit, log, cloglog
-gaussian           identity, log, inverse
-Gamma              identity, inverse, log
-inverse.gaussian   1/mu^2, identity, inverse, log
-poisson            log, identity, sqrt
-quasi              logit, probit, cloglog, identity, inverse,
-                   log, 1/mu^2, sqrt
-```
+<!-- ## Families -->
 
+<!-- A special link function to each response variable. In `R` some different link functions are available by default: -->
 
-# Simulations
+<!-- ```{r eval = FALSE} -->
+<!-- ## Family name     Link functions -->
+<!-- binomial           logit, probit, log, cloglog -->
+<!-- gaussian           identity, log, inverse -->
+<!-- Gamma              identity, inverse, log -->
+<!-- inverse.gaussian   1/mu^2, identity, inverse, log -->
+<!-- poisson            log, identity, sqrt -->
+<!-- quasi              logit, probit, cloglog, identity, inverse, -->
+<!--                    log, 1/mu^2, sqrt -->
+<!-- ``` -->
 
-## Random numbers generation
 
-Use a random monster:
+<!-- # Simulations -->
 
-\vspace{5mm}
+<!-- ## Random numbers generation -->
 
-```{r echo=FALSE, out.width="80%"}
-knitr::include_graphics("img/random.png")
-```
+<!-- Use a random monster: -->
 
-## but its better with `R`
+<!-- \vspace{5mm} -->
 
-\small
-Random numbers drawn from a statistical distribution $\rightarrow$ the distribution name (see `??Distributions` for an exhaustive list of distribution) prefixed by `r` (random)
+<!-- ```{r echo=FALSE, out.width="80%"} -->
+<!-- knitr::include_graphics("img/random.png") -->
+<!-- ``` -->
 
-```{r eval = FALSE}
-rnorm(10, mean = 0, sd = 1) # draw 10 numbers from a
-                            # normal distr.
-rt(10, df = 20)             # draw 10 numbers from a
-                            # t distr. with 20df
-```
+<!-- ## but its better with `R` -->
 
+<!-- \small -->
+<!-- Random numbers drawn from a statistical distribution $\rightarrow$ the distribution name (see `??Distributions` for an exhaustive list of distribution) prefixed by `r` (random) -->
 
-Sampling (with or without replacement) from a vector:
+<!-- ```{r eval = FALSE} -->
+<!-- rnorm(10, mean = 0, sd = 1) # draw 10 numbers from a -->
+<!--                             # normal distr. -->
+<!-- rt(10, df = 20)             # draw 10 numbers from a -->
+<!--                             # t distr. with 20df -->
+<!-- ``` -->
 
-```{r}
-sample(1:5, size = 10, replace = T)
-```
 
-Make the simulations replicable by *seeding* them:
+<!-- Sampling (with or without replacement) from a vector: -->
 
-```{r eval=FALSE}
-set.seed(999)
-rpois(4, 5)
-```
+<!-- ```{r} -->
+<!-- sample(1:5, size = 10, replace = T) -->
+<!-- ``` -->
 
-## Bootstrap by resampling
+<!-- Make the simulations replicable by *seeding* them: -->
 
-- Compute the sample statistics on multiple bootstrap samples $B$s drawn with replacement from the original data
+<!-- ```{r eval=FALSE} -->
+<!-- set.seed(999) -->
+<!-- rpois(4, 5) -->
+<!-- ``` -->
 
-- Assess the variability of the statistics via the distribution of the bootstrap replicates (i.e., the statics computed on the bootstrap samples)
+<!-- ## Bootstrap by resampling -->
 
-**Bootstrap confidence intervals**
+<!-- - Compute the sample statistics on multiple bootstrap samples $B$s drawn with replacement from the original data -->
 
-Percentile intervals are the $1 - \alpha$ confidence intervals for the sample statistics with limits given by the quantiles of the bootstrap distribution
+<!-- - Assess the variability of the statistics via the distribution of the bootstrap replicates (i.e., the statics computed on the bootstrap samples) -->
 
-## In `R`
+<!-- **Bootstrap confidence intervals** -->
 
-\small
+<!-- Percentile intervals are the $1 - \alpha$ confidence intervals for the sample statistics with limits given by the quantiles of the bootstrap distribution -->
 
-```{r eval=TRUE}
-# example taken from Prof. Wickelmaier
-mouse <- data.frame(
-   grp = rep(c("trt", "ctl"), c(7, 9)),
-   surv = c(94, 197, 16, 38, 99, 141, 23, # trt
-            52, 104, 146, 10, 50, 31, 40, 27, 46) # ctl
-   )
-mean(mouse$surv[mouse$grp == "trt"]) #
-## Resampling
-sam1 <- numeric(1000) # 1000 bootstrap replicates
-for(i in seq_along(sam1)){
- trt <- sample(mouse$surv[mouse$grp == "trt"], 7, replace=T)
- sam1[i] <- mean(trt)
-}
+<!-- ## In `R` -->
 
-```
+<!-- \small -->
 
-##
+<!-- ```{r eval=TRUE} -->
+<!-- # example taken from Prof. Wickelmaier -->
+<!-- mouse <- data.frame( -->
+<!--    grp = rep(c("trt", "ctl"), c(7, 9)), -->
+<!--    surv = c(94, 197, 16, 38, 99, 141, 23, # trt -->
+<!--             52, 104, 146, 10, 50, 31, 40, 27, 46) # ctl -->
+<!--    ) -->
+<!-- mean(mouse$surv[mouse$grp == "trt"]) # -->
+<!-- ## Resampling -->
+<!-- sam1 <- numeric(1000) # 1000 bootstrap replicates -->
+<!-- for(i in seq_along(sam1)){ -->
+<!--  trt <- sample(mouse$surv[mouse$grp == "trt"], 7, replace=T) -->
+<!--  sam1[i] <- mean(trt) -->
+<!-- } -->
 
-```{r echo=T}
-quantile(sam1, c(.025, .975))
-```
+<!-- ``` -->
 
+<!-- ## -->
 
-```{r echo=FALSE, out.width="90%"}
-hist(sam1, breaks = 30,
-     col="Pink", ylab = "Bootstrap distribution",
-     xlab = "Bootstrap replicate", main = "", cex.lab =2)
-abline(v = mean(sam1), lwd=2)
-abline(v = quantile(sam1, c(.025, .975))[1], lwd=2, lty=2)
-abline(v = quantile(sam1, c(.025, .975))[2], lwd=2, lty=2)
-```
+<!-- ```{r echo=T} -->
+<!-- quantile(sam1, c(.025, .975)) -->
+<!-- ``` -->
 
 
-## Parametric bootstrap
+<!-- ```{r echo=FALSE, out.width="90%"} -->
+<!-- hist(sam1, breaks = 30, -->
+<!--      col="Pink", ylab = "Bootstrap distribution", -->
+<!--      xlab = "Bootstrap replicate", main = "", cex.lab =2) -->
+<!-- abline(v = mean(sam1), lwd=2) -->
+<!-- abline(v = quantile(sam1, c(.025, .975))[1], lwd=2, lty=2) -->
+<!-- abline(v = quantile(sam1, c(.025, .975))[2], lwd=2, lty=2) -->
+<!-- ``` -->
 
-For the likelihood ratio test:
 
-- Fit a general ($M_1$) and a restricted model ($M_0$) to the original
-data $x$. Compute the original likelihood ratio s(x) between $M_1$
-and $M_0$
+<!-- ## Parametric bootstrap -->
 
-- Simulate $B$ bootstrap samples  based on the stochastic
-part of the restricted model: These are observations for which
-$H_0$ is true
+<!-- For the likelihood ratio test: -->
 
-- For each sample, fit $M_1$ and $M_0$ and compute the bootstrap
-replicate of the likelihood ratio between them
+<!-- - Fit a general ($M_1$) and a restricted model ($M_0$) to the original -->
+<!-- data $x$. Compute the original likelihood ratio s(x) between $M_1$ -->
+<!-- and $M_0$ -->
 
-- Assess the significance of the original likelihood ratio via the
-sampling distribution of bootstrap replicates
+<!-- - Simulate $B$ bootstrap samples  based on the stochastic -->
+<!-- part of the restricted model: These are observations for which -->
+<!-- $H_0$ is true -->
 
-##
+<!-- - For each sample, fit $M_1$ and $M_0$ and compute the bootstrap -->
+<!-- replicate of the likelihood ratio between them -->
 
-```{r results='hide'}
-## Model fit to original data
-lm0 <- lm(surv ~ 1, mouse)  # H0: no difference between gr
-lm1 <- lm(surv ~ grp, mouse) # H1: group effect
-anova(lm0, lm1)             # original likelihood ratio
-```
+<!-- - Assess the significance of the original likelihood ratio via the -->
+<!-- sampling distribution of bootstrap replicates -->
 
-```{r echo=FALSE}
-anova(lm0, lm1)$F[2]
-```
+<!-- ## -->
 
+<!-- ```{r results='hide'} -->
+<!-- ## Model fit to original data -->
+<!-- lm0 <- lm(surv ~ 1, mouse)  # H0: no difference between gr -->
+<!-- lm1 <- lm(surv ~ grp, mouse) # H1: group effect -->
+<!-- anova(lm0, lm1)             # original likelihood ratio -->
+<!-- ``` -->
 
-```{r}
- ## Parametric bootstrap
-sim1 <- numeric(1000)
-for(i in seq_along(sim1)){
-  surv0 <- simulate(lm0)$sim_1  # simulate from null model
-  m0 <- lm(surv0 ~ 1, mouse)    # fit null model
-  m1 <- lm(surv0 ~ grp, mouse)  # fit alternative model
-  sim1[i] <- anova(m0, m1)$F[2] # bootstrap likeli. ratio
-  }
-```
+<!-- ```{r echo=FALSE} -->
+<!-- anova(lm0, lm1)$F[2] -->
+<!-- ``` -->
 
 
-##
+<!-- ```{r} -->
+<!--  ## Parametric bootstrap -->
+<!-- sim1 <- numeric(1000) -->
+<!-- for(i in seq_along(sim1)){ -->
+<!--   surv0 <- simulate(lm0)$sim_1  # simulate from null model -->
+<!--   m0 <- lm(surv0 ~ 1, mouse)    # fit null model -->
+<!--   m1 <- lm(surv0 ~ grp, mouse)  # fit alternative model -->
+<!--   sim1[i] <- anova(m0, m1)$F[2] # bootstrap likeli. ratio -->
+<!--   } -->
+<!-- ``` -->
 
-The bootstrap $p-value$ is the proportion of
-bootstrap replicates that exceed the original likelihood ratio:
 
-```{r echo=TRUE}
-mean(sim1 >
-anova(lm0, lm1)$F[2])
-```
+<!-- ## -->
 
+<!-- The bootstrap $p-value$ is the proportion of -->
+<!-- bootstrap replicates that exceed the original likelihood ratio: -->
 
-```{r echo=FALSE}
-hist(sim1, breaks =30, col="pink", xlim = c(0,10),
-     xlab="Density of sampling distribution",
-     ylab="Bootstrap likelihood test", cex.lab=2, main="")
+<!-- ```{r echo=TRUE} -->
+<!-- mean(sim1 > -->
+<!-- anova(lm0, lm1)$F[2]) -->
+<!-- ``` -->
 
-```
+
+<!-- ```{r echo=FALSE} -->
+<!-- hist(sim1, breaks =30, col="pink", xlim = c(0,10), -->
+<!--      xlab="Density of sampling distribution", -->
+<!--      ylab="Bootstrap likelihood test", cex.lab=2, main="") -->
+
+<!-- ``` -->
 
 
 
