@@ -13,6 +13,8 @@ output:
 header-includes:
     - \AtBeginDocument{\title[co\texttt{R}so]{Un'int\texttt{R}oduzione}}
     - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
+    - \AtBeginDocument{\date[8-9 Giugno]{8-9 Giugno 2023}}
+    - \AtBeginDocument{\institute[Lezioni UniCatt]{Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)}}
     - \usepackage{graphicx} 
     - \usepackage{setspace}
     - \usepackage{tabularx}
@@ -219,7 +221,7 @@ knitr::include_graphics("img/project2.png")
 
 
 ::: column
-```{r echo = FALSE, out.width = "10%"}
+```{r echo = FALSE, out.width = "100%"}
 knitr::include_graphics("img/project3.png")
 ```
 
@@ -300,11 +302,11 @@ La variabile (in senso statistico) viene registrata in una variabile (in senso i
 Si distinguono in base al tipo di informazione che contengono, che in R può essere: 
 
 \begin{itemize}
-\item `int`: numeriche (discrete, 1, 2, 3 ....)
-\item `num`: numeriche (continue, 0.01, 0.02, 0.03, ...)
-\item `logi`: logiche (TRUE, FALSE)
-\item `chr`: caratteri ("a", "B", "c", ...) 
-\item `factor`: fattori distinti da diversi livelli
+\item \texttt{int}: numeriche (discrete, 1, 2, 3 ....)
+\item \texttt{num}: numeriche (continue, 0.01, 0.02, 0.03, ...)
+\item \texttt{logi}: logiche (TRUE, FALSE)
+\item \texttt{chr}: caratteri ("a", "B", "c", ...) 
+\item \texttt{factor}: fattori distinti da diversi livelli
 \end{itemize}
 
 
@@ -381,7 +383,7 @@ Esistono fondamentalmente due comandi di assegnazione
 
 2. `X <- log(2^2)` \vspace{3mm} =) Fate contenti i puristi di R
 
-La logica è che l'oggetto a destro (l'operazione e quindi il risultato che se ne ottiene) viene assegnato (`=` oppure `<-`) viene assegnato alla variabile (o oggetto) a destra
+La logica è che l'oggetto a destro (l'operazione e quindi il risultato che se ne ottiene) viene assegnato (`=` oppure `<-`) alla variabile (o oggetto) a destra
 
 \textcolor{template}{Attenzione!} Siccome `R` è case sensitive: `x` e `X` sono due oggetti differenti!
 
@@ -461,7 +463,7 @@ x == X
 
 \begin{center}
 
-\color{template} `R` community is the best feature of `R` \normalcolor
+\color{template} \texttt{R} community is the best feature of \texttt{R} \normalcolor
 \end{center}
 
 Copia \& Incolla l'errore su google
@@ -532,7 +534,7 @@ load("my-Computations.RData")
 
 ## 
 
-Se decidete di non usare i progetti di R \small(non è una buona idea, choose your own adventure )\normalsize dovete conoscere le vostre directory:
+Se decidete di non usare i progetti di R \small(non è una buona idea, choose your own adventure) \normalsize dovete conoscere le vostre directory:
 
 ```{r eval=FALSE}
 getwd() # restituisce la working directory in cui siete
