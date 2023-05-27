@@ -13,6 +13,8 @@ output:
 header-includes:
     - \AtBeginDocument{\title[st\texttt{R}utture]{st\texttt{R}utture di dati}}
     - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
+    - \AtBeginDocument{\date[8-9 Giugno]{8-9 Giugno 2023}}
+    - \AtBeginDocument{\institute[Lezioni UniCatt]{Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)}}
     - \useinnertheme{circles}
     - \usetheme[compressed]{Singapore}
     - \usepackage{graphicx} 
@@ -44,7 +46,7 @@ header-includes:
     - \setbeamercolor{subsection in head/foot}{fg=template, bg=template!20}
     - \AtBeginSection[]
           {
-             \begin{frame}
+             \begin{frame}[plain]
              \frametitle{Table of Contents}
              \tableofcontents[currentsection]
               \end{frame}
@@ -81,10 +83,10 @@ set.seed(9999)
 library(knitr)
 ```
 
-
-## Table of contents
+## Table of contents {.plain}
 
 \tableofcontents
+
 
 # Vettori
 
@@ -332,8 +334,21 @@ peso[-2]      # vettore peso senza il secondo elemento
 
 
 ## Indicizzare i vettori usando la logica
+```{r}
+peso
+```
 
+\pause
 
+Quali sono i valori maggiori di 7? 
+
+```{r}
+peso > 7
+```
+
+\pause
+
+Usiamo questa informazione per filtrare il nostro vettore:
 
 ```{r  eval=TRUE}
 peso[peso > 7] # valori in peso maggiori di 7
