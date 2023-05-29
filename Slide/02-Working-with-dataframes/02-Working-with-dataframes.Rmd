@@ -19,6 +19,7 @@ header-includes:
     - \usetheme[compressed]{Singapore}
     - \usepackage{graphicx} 
     - \usepackage{setspace}
+    - \usepackage{tikzsymbols}
     - \usepackage{tabularx}
     - \usepackage[english]{babel}
     - \usepackage{tikzsymbols}
@@ -91,7 +92,14 @@ knit_hooks$set(output = function(x, options) {
     # any lines wider than n should be wrapped
     if (any(nchar(x) > n)) x = strwrap(x, width = n)
     x = paste(x, collapse = '\n')
-  }
+  } else if (!is.null(n <- options$out.lines)) {
+x <- xfun::split_lines(x)
+if (length(x) > n) {
+# truncate the output
+x <- c(head(x, n), "....\n")
+}
+x <- paste(x, collapse = "\n")
+}
   hook_output(x, options)
 })
 set.seed(9999)
@@ -320,33 +328,341 @@ Aiuti esterni:
 
 # Lavora con i dati 
 
+## Disclaimer
 
-## Sorting
+Presento solo le opzioni disponibili con base-R.
+
+\
+Si ottengono le stesse cose che si otterrebbero con `tidyverse`
+\
+
+La logica di `tidyverse` è un po' diversa, ma si ottiene lo stesso risultato \small con più codice 
+
+## Sorting (Riordinare)
 
 \small
+```{r out.lines = 4}
+babies
+```
+
 
 `order()`: 
 
+::: columns
+
+:::: column
+\footnotesize
+Ordine crescente
+
+```{r out.lines=4}
+babies[order(babies$peso), ] 
+```
+
+::::
+
+:::: column
+\footnotesize
+```{r out.lines = 4}
+babies[order(babies$peso,    
+             decreasing = TRUE), ] 
+```
+
+::::
+
+
+:::
+
+## 
+
+
+Si può ordinare anche considerando più variabili:
+
+```{r eval = TRUE}
+babies[order(babies$peso, babies$altezza, 
+             decreasing = TRUE), ]         
+```
+
+
+## Wide format
+
+Siamo abituati ad avere i dati in formato wide, ovvero matrici $p \times v$ dove $p = 1, \ldots, P$ partecipanti e $v = 1, \ldots, V$ variabili
+
+Il numero di righe è uguale a $P$ (numero dei partecipanti) e il numero di colonne è uguale a $V$ (numero di variabili): 
+
+\small 
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c c c c c}
+		\hline
+		& \multicolumn{2}{c}{Condition A}  & \multicolumn{2}{c}{Condition B} \\ \cline{2-5}
+		Respondent & RT \Snowman & Accuracy \Snowman &RT \Snowman & Accuracy \Snowman \\ \hline
+		$p1$ & 520  & 1 & 420 & 0\\
+		$p2$ & 320  & 0 & 620 & 0 \\
+		$p3$ & 720 & 1 & 520 & 1\\
+		\hline
+	\end{tabular}
+\end{table}
+
+## Long format
+
+I dati organizzati in long format stanno prendendo sempre più piede
+
+I software per la somministrazione di esperimenti (e.g., Inquisit, e-prime, PsychopPy) forniscono i risultati in long format
+
+In riga si trovano le singole osservazioni. Ogni partecipante ha tante righe quante sono le osservazioni (i.e., i trial o le domande a cui ha risposto)
+
+Il numero totale di righe è il prodotto tra $P$ e il numero di trial di cui è composto l'esperimento
+
+\begin{table}[h!]
+	\centering
+		\begin{tabular}{c c c c c}
+		\hline
+		Respondent & Condition & Stimulus & RT & Accuracy \\ \hline
+		$p1$ & A & \Snowman & 520 & 1 \\
+		$p1$ & B & \Snowman & 420 & 0 \\
+		$p2$ & A & \Snowman & 320 & 0 \\
+$p2$ & B & \Snowman & 620 & 0 \\
+		$p3$ & A & \Snowman & 720 & 1 \\
+$p3$ & B & \Snowman & 520 & 1 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+
+
+
+## Long to wide
+
+\small 
+
+Da qui (long format)
+
+```{r out.lines = 7}
+Indometh # Long format
+```
+
+A qui (wide format):
+\footnotesize
+
+```{r echo=FALSE, myline = 80}
+(df.w <- reshape(Indometh, v.names="conc", 
+                timevar="time",
+                idvar="Subject", direction="wide"))
+```
+
+
+## `reshape()`
+
+Per girare il dataset si utilizza la funzione reshape
+
+Sempre meglio sapere come sono fatti i dati per evitare sorprese: 
+\footnotesize
+
 ```{r}
-babies[order(babies$peso), ] # sort by increasing peso
-```
-```{r eval = FALSE}
-babies[order(babies$peso,    # sort by decreasing peso
-             decreasing = T), ] 
+levels(Indometh$Subject) # quanti soggetti ho?
+
+table(Indometh$Subject) # quante osservazioni ho per soggetto? 
+
+nrow(Indometh) # quante righe ha il mio dataset?
 ```
 
-Multiple arguments in `order`: 
+##
+
+Ci aspettiamo un dataframe a 6 righe e con 11 colonne $+$ la colonna con gli id dei soggetti:  
+
+\small
+
+```{r tidy=TRUE, tidy.opts=list(width.cutoff=60), out.lines=3}
+# From long to wide
+df.w <- reshape(Indometh, v.names="conc", 
+                timevar="time",
+                idvar="Subject", direction="wide")
+```
+
+Le aspettative sono rispettate? 
+
+\footnotesize
+```{r myline = 60}
+nrow(df.w) == length(levels(Indometh$Subject)) # ho sei righe?
+
+sum(grepl("conc", colnames(df.w))) # ho 11 colonne per le 11 variabili? 
+
+```
+
+
+## Facendo prima...
+
+\footnotesize
+
+
+```{r out.width="70%", out.lines=8, echo = FALSE}
+df.w
+```
+
+
+
+## Wide to long
+
+\small
+
+```{r tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+# From wide to long
+df.l <- reshape(df.w, varying=list(2:12), 
+                v.names="conc", 
+                idvar="Subject", 
+                times = names(df.w)[-1],
+                direction="long")
+```
+
+```{r echo=FALSE, out.lines=4}
+df.l
+```
+
+
+## Unire dataset 
+
+Se i dataset hanno lo stesso numero di colonne **con lo stesso nome**
 
 ```{r eval = FALSE}
-babies[order(babies$peso, babies$months, decreasing = TRUE), ]         
+all_data = rbind(data, data1, data2, ...) 
+
 ```
+
+Se i dataset hanno lo stesso numero di righe: 
+
+```{r eval = FALSE}
+all_data = cbind(data, data1, data2, ...) 
+```
+
+
+## 
+
+Se i dataset hanno numeri diversi di righe e/o colonne, ma hanno almeno una caratteristica in comune (e.g., `id`) $\rightarrow$ `merge()`
+
+
+```{r eval=FALSE}
+all_data = merge(data1, data2, 
+                 by = "ID")
+```
+
+
+All'argomento `by` si può passare anche un vettore di character che indica secondo quale variabile vogliamo che vengano uniti i dataset
+
+
+## `merge()`: Un esempio 
+
+::: columns
+
+:::: column
+\footnotesize
+
+```{r out.lines = 4}
+babies
+```
+
+::::
+
+\pause
+
+:::: column
+\footnotesize
+```{r echo = FALSE, out.lines = 4}
+baby_detail = data.frame(id = babies$id,
+                         termine = rep(c("yes", "no"), 
+                                       c( nrow(babies)*0.7, 
+                                           nrow(babies)*0.3)), 
+                         apgar = c(8,8,9,6,8,5,3,6,4,3), 
+                         genere = babies$genere)
+
+```
+
+```{r out.lines=4}
+baby_detail
+```
+
+
+::::
+
+:::
+
+\footnotesize
+
+```{r }
+merge(babies, baby_detail)
+```
+
+
+
+
+
+## Attenzione! Dataset con id diversi
+
+\small
+
+```{r echo = FALSE}
+new_baby = data.frame(id = c(babies$id[1:4], 
+                             paste0("baby", 11:16)),
+                         termine = rep(c("yes", "no"), 
+                                       c( nrow(babies)*0.7, 
+                                           nrow(babies)*0.3)), 
+                         apgar = c(8,8,9,6,8,5,3,6,4,3), 
+                         genere = babies$genere)
+new_baby
+
+```
+
+\pause
+\footnotesize
+
+```{r}
+merge(babies, new_baby)
+```
+
+
+## Oppure
+\footnotesize
+
+```{r}
+merge(babies, new_baby, 
+      all = T)
+```
+
+
+
+
+# Esporta i dati
+
+##
+
+File (csv) o text:
+
+```{r eval=FALSE}
+write.table(data, # il dataframe
+            file = "mydata.txt", # il nome che si vuol dare + estensione
+            header = TRUE, 
+            sep = "\t", 
+            ....) 
+```
+
+L'ambiente di `R`: 
+
+```{r eval=FALSE}
+save(dat, file = "exp1_data.rda") # salva un oggetto specifico 
+save(file = "the_earth.rda")      # save the environment
+load("the_earth.rda")             # re-importa l'environment
+```
+
+
 
 ## Aggregating
+
+Aggrega una variabile "dipendente" a seconda di una serie di variabili dipendenti e vi applica una funzione
 
 Aggregate a response variable according to grouping variable(s) (e.g., averaging per experimental conditions): 
 
 ```{r eval = FALSE}
-# Single response variable, single grouping variable
+# Una variabile dipendente (y) e pi single grouping variable
 aggregate(y ~ x, data = data, FUN, ...)
 
 # Multiple response variables, multiple grouping variables
@@ -364,667 +680,5 @@ ToothGrowth # Vitamin C and tooth growth (Guinea Pigs)
 ```{r}
 aggregate(len ~ supp + dose, data = ToothGrowth, mean)
 ```
-## Reshaping: Long to wide
-
-Data can be organized in wide format (i.e., one line for each statistical unit) or in long format (i.e., one line for each observation). 
-
-```{r out.lines = 7}
-Indometh # Long format
-```
-
-
-## Long to wide
-
-\small
-
-```{r tidy=TRUE, tidy.opts=list(width.cutoff=60), out.lines=3}
-# From long to wide
-df.w <- reshape(Indometh, v.names="conc", 
-                timevar="time",
-                idvar="Subject", direction="wide")
-```
-
-```{r out.width="70%", out.lines=8, echo = FALSE}
-df.w
-```
-
-
-## Reshaping: Wide to long
-
-\small
-
-```{r tidy=TRUE, tidy.opts=list(width.cutoff=60)}
-# From wide to long
-df.l <- reshape(df.w, varying=list(2:12), 
-                v.names="conc", 
-                idvar="Subject", direction="long",
-times=c(.25, .5, .75, 1, 1.25, 2, 3, 4, 5, 6, 8))
-```
-
-```{r echo=FALSE, out.lines=4}
-df.l
-```
-
-```{r out.lines=4}
-df.l[order(df.l$Subject), ] # reorder by subject
-
-```
-
-
-## Combine data frames
-
-If they have the same number of columns/rows
-
-```{r eval = FALSE}
-all_data = rbind(data, data1, data2) # same columns
-all_data = cbind(data, data1, data2) # same rows
-```
-
-If they have different rows/columns but they share at least one characteristic (e.g., `ID`): 
-
-```{r eval=FALSE}
-all_data = merge(data1, data2, 
-                 by = "ID")
-```
-
-
-If there are different IDs in the two datasets $\rightarrow$ added in new rows
-
-`all_data` contains all columns in `data1` and `data2`. The columns of the IDs in `data1` but not in `data2` (and vice versa) will be filled with `NA`s accordingly
-
-## Export data
-
-Writing text (or csv) file: 
-
-```{r eval=FALSE}
-write.table(data, # what you want to write 
-            file = "mydata.txt", # its name + extension
-            header = TRUE, # first row with col names?
-            sep = "\t",  # column separator 
-            ....) # other arguments
-```
-
-`R` environment (again): 
-
-```{r eval=FALSE}
-save(dat, file = "exp1_data.rda") # save something specific 
-save(file = "the_earth.rda")      # save the environment
-load("the_earth.rda")             # load it back
-```
-
-
-## 
-
-# Esporta i dati 
-
-## 
-
-Vengono creati **c**oncatenando Impo variabili insieme 
-
-Si usa la funzione `c()`
-
-Tutte le variaili all'interno della funzione `c()` vanno separate da una virgola
-
-Diversi tipi di variabili $\rightarrow$ diversi tipi di vettori: 
-
-- `int`: vettori numerici (numeri interi)
-- `num`: vettori numerici (numeri continui)
-- `logi`: vettori logici
-- `chr`: vettori character
-- `factor`: vettori factor con diversi livelli 
-
-
-
-## `int` \& `num` {.plain}
-
-`int`: numeri interi: `r -3:3`
-
-```{r}
-mesi = c(5, 6, 8, 10, 12, 16)
-```
-
-```{r echo = FALSE}
-mesi
-```
-
-
-`num`: tutti i valori numerici tra $-\infty$ e $+\infty$: `r rnorm(6)`
-
-```{r}
-peso = seq(3, 11, by = 1.5) 
-```
-
-```{r echo = FALSE}
-peso
-```
-
-## `logi`
-
-Valori logici possono essere veri `TRUE` (`T`) o falsi `FALSE` (`F`): 
-
-```{r}
-v_logi = c(TRUE, TRUE, FALSE, FALSE, TRUE)
-```
-
-```{r echo = FALSE}
-v_logi
-```
-
-Si usano per testare delle condizioni: 
-
-```{r}
-mesi > 12
-```
-## `chr` \& `factor`
-
-`chr`: characters: `r c(letters[1:3], LETTERS[4:6])`
-
-```{r}
-v_chr = c(letters[1:3], LETTERS[4:6])
-```
-
-```{r echo = FALSE}
-v_chr 
-```
-
-
-`factor`: Usa numeri o carattarri per identificare i livelli della variabile: 
-
-```{r}
-ses = factor(c(rep(c("low", "medium", "high"), each = 2)))
-```
-
-```{r echo = FALSE}
-ses
-```
-
-Si può cambaire l'ordine dei livelli:
-
-```{r}
-ses1 = factor(ses, levels = c("medium", "high", "low")) 
-```
-```{r echo = FALSE}
-ses1
-```
-
-
-
-## Creare i vettori
-
-\small
-
-Concatenare le variabili con `c()`: `vec = c(1, 2, 3, 4, 5)`
-
-Utilizzando le sequenze: 
-
-```{r}
--5:5 # vector of 11 numbers from -5 to 5
-
-seq(-2.5, 2.5, by = 0.5) # sequence in steps of 0.5 
-```
-
-Ripetendo gli elementi: 
-
-```{r}
-rep(1:3, 4)
-```
-
-## Creare i vettori II
-
-
-```{r}
-rep(c("condA", "condB"), each = 3)
-```
-
-```{r}
-rep(c("on", "off"), c(3, 2))
-```
-```{r}
-paste0("item", 1:4)
-```
-
-
-
-## Non mischiate i vettori! \small a meno che non lo vogliate davvero
-
-`int` + `num` $\rightarrow$ `num` 
-
-`int`/`num` + `logi` $\rightarrow$ `int`/`num` 
-
-`int`/`num` + `factor` $\rightarrow$ `int`/`num` 
-
-`int`/`num` + `chr` $\rightarrow$ `chr`
-
-`chr` + `logi` $\rightarrow$ `chr`
-
-
-## Vettori e operazioni
-
-I vettori possono essere sommati/divisi/moltiplicati tra di loro o anche per un numero singolo
-
-
-```{r}
-a = c(1:8) # vettore di lunghezza 8
-a
-b = c(4:1) # vettore di lunghezza 4
-b 
-
-a - b # il vettore b è "riciclato" sul vettore a
-```
-
-Se i vettori non hanno la stessa lunghezza (o uno non è un multiplo dell'altro) ottenete un warning 
-
-
-## Vettori e operazioni II
-
-Applicando una funzione a un vettore $\rightarrow$ viene applicata a **tutti** gli elementi del vettore
-
-```{r}
-sqrt(a)
-```
-
-La stessa operazione si può applicare a ogni singolo elemento del vettore 
-
-```{r}
-(a - mean(a))^2 # squared deviation
-```
-
-
-## Indicizzare i vettori 
-
-Come si va a "raggiungere" un particolare elemento all'interno del vettore? 
-
-
-```{r eval=TRUE}
-nomi = c("Pasquale", "Egidio", "Debora", "Luca", "Andrea")
-```
-
-
-\begin{table}
-\centering
-\begin{tabular}{p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}}
-\hline
-\multicolumn{1}{|c|}{Pasquale} & \multicolumn{1}{|c|}{Egidio}& \multicolumn{1}{|c|}{Debora} & \multicolumn{1}{|c|}{Luca} & \multicolumn{1}{|c|}{Andrea} \\\hline
-& & & & \\
-
-\multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}& \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5}\\
-\end{tabular}
-\end{table}
-
-\pause 
-
-\vspace{5mm}
-
-\centering 
-
-`nome_vettore[indice]`
-
-## Indicizzare i vettori II 
-
-\begin{table}
-\centering
-\begin{tabular}{p{2cm}p{2cm}p{2cm}p{2cm}p{2cm}}
-\hline
-\multicolumn{1}{|c|}{Pasquale} & \multicolumn{1}{|c|}{Egidio}& \multicolumn{1}{|c|}{Debora} & \multicolumn{1}{|c|}{Luca} & \multicolumn{1}{|c|}{Andrea} \\\hline
-& & & & \\
-
-\multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}& \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5}\\
-\end{tabular}
-\end{table}
-
-\centering
-\pause
-
-`nomi[1]` $\rightarrow$ \pause `r nomi[1]`
-
-`nomi[3]` $\rightarrow$ \pause `r  nomi[3]`
-
-`nomi[seq(2, 5, by = 2)]` $\rightarrow$ \pause `r nomi[seq(2, 5, by = 2)]`
-
-## Indicizzare i vettori: Esempi 
-
-\centering
-
-```{r}
-peso
-```
-
-
-\small
-```{r eval=TRUE}
-peso[2]        # secondo elemento del vettore peso
-(peso[6] = 15.2) # sostituisce il sesto elemento del v. peso
-peso[seq(1, 6, by = 2)] # elementi 1, 3, 5
-peso[2:6]      # dal 2 al 6 elemento di peso
-peso[-2]      # vettore peso senza il secondo elemento
-```
-
-
-## Indicizzare i vettori usando la logica
-```{r}
-peso
-```
-
-\pause
-
-Quali sono i valori maggiori di 7? 
-
-```{r}
-peso > 7
-```
-
-\pause
-
-Usiamo questa informazione per filtrare il nostro vettore:
-
-```{r  eval=TRUE}
-peso[peso > 7] # valori in peso maggiori di 7
-peso[peso >= 4.5 & peso < 8] # valori tra 4.5 e 8 
-```
-
-
-
-# Matrici 
-
-
-## Un vettore che ci ha creduto abbastanza
-### Quel che basta per vincere una seconda dimensione 
-
-
-
-`matrix(data, nrow, ncol, byrow = TRUE)`
-
-Crea una matrice $3 \times 4$ e la assegna all'oggetto `A`:
-
-```{r}
-A = matrix(1:12, nrow=3, ncol = 4, byrow = FALSE)
-A
-```
-
-\vspace{5mm}
-
-
-WARNING: i dati all'interno della matrice devono essere tutti dello stesso tipo
-
-
-## Etichette 
-
-
-```{r, tidy=TRUE}
-rownames(A) = c(paste("riga", 1:nrow(A), sep = "_")) 
-
-colnames(A) = c(paste("colonna", 1:ncol(A), sep = "_"))
-
-A
-
-```
-
-
-## Trasposta della matrice: 
-
-
-
-\small
-
-```{r}
-A
-```
-
-
-\small 
-```{r}
-t(A)
-```
-
-
-
-## Creare le matrici (ancora)
-
-Le matrici si possono anche creare concatenando vettori colonna:
-\small
-
-```{r eval=TRUE}
-cbind(a1 = 1:4, a2 = 5:8, a3 = 9:12) 
-```
-
-o vettori riga: 
-
-```{r}
-rbind(a1 = 1:4, a2 = 5:8, a3 = 9:12)
-```
-
-
-## Indicizzare le matrici 
-
-Abbiamo due dimensioni: 
-
-
-```{r echo = FALSE, results='asis'}
-
-
-my.mat = rbind("[1,]" = c("$1, 1$", "$1, 2$", "$1, 3$"), 
-       "[2,]" = c("$2, 1$", "$2, 2$", "$2, 3$"), 
-       "[3,]" = c("$3, 1$", "$3, 2$", "$3, 3$"))
-colnames(my.mat) = c("[,1]", "[,2]", "[,3]")
-my.mat %>% kable(align = "c")
-
-```
-
-
-\centering 
-
-`my_matrix[righe, colonne]`
-
-
-## Indicizzare le matrici: In pratica
-
-\small
-```{r}
-A
-```
-
-\onslide<1->  `A[1, ]` $\rightarrow$ \onslide<2-> `r A[1, ]`
-
-\onslide<1->`A[2, ]` $\rightarrow$ \onslide<3-> `r A[2, ]`
-
-\onslide<1->`A[2, 3]` $\rightarrow$ \onslide<4-> `r A[2, 3]` 
-
-
-
-
-# Array
-
-## Una matrice che ci ha creduto davvero
-### Davvero troppo
-
-\vspace*{5mm}
-
-    array(data, c(nrow, ncol, ntab))
-
-\vspace{3mm}
-
-Avendo 3 argomenti oltre i dati `nrow, ncol, ntab`, la loro indicizzazione prevede l'utilizzo di due virgole per accedere ai singoli argomenti: 
-
-`nome_array[righe, colonne, tab]`
-
-
-## Un array 
-\footnotesize
-
-```{r}
-my_array = array(1:20, c(2, 5, 3)) # 2 x 5 x 3 array
-my_array
-```
-
-
-## Indicizzare l'array
-
-\small 
-
-\onslide<1->
-
-`my_array[1, , ]`
-
-\onslide<2->
-```{r echo = FALSE}
-my_array[1, , ]
-```
-
-\onslide<1->
-
-`my_array[, 2, ]`
-
-\onslide<3->
-```{r echo = FALSE}
-my_array[, 2 , ]
-```
-
-\onslide<1->
-
-`my_array[, , 3]`
-
-\onslide<4->
-```{r echo = FALSE}
-my_array[, , 3]
-```
-
-
-# Liste 
-
-## Un array con più senso 
- 
-Sono dei contenitori per diversi tipi di oggetti (e.g., vettori, data frames, altre liste, matrici, array ecc.)
-
-Ai loro elementi possono essere assegnati dei nomi: 
-\small
-```{r}
-my_list = list(w = peso, m = mesi, s = ses1, a = A)
-names(my_list)
-
-str(my_list)
-```
-
-
-## Indicizzare le liste 
-
-Gli elementi della lista possono essere indicizzati con `$` (se la lista ha dei nomi):
-
-```{r}
-my_list$m # vettore dei mesi
-```
-
-
-oppure con `[[]]`: 
-
-::: columns
-
-:::: column
-
-Nome dell'elemento
-
-```{r}
-my_list[["m"]]
-```
-
-::::
-
-:::: column
-Posizione dell'elemento: 
-
-```{r}
-my_list[[2]]
-```
-
-::::
-
-
-
-:::
-
-
-
-
-
-# Data frames
-
-## Una lista più ordinata
-
-
-I data frames sono delle liste di vettori di uguale lunghezza
-
-I diversi vettori possono contenere informazioni di diverse natura
-
-I data frame più comuni sono i data frame in versione wide (i.e., $soggetti \times variabili$) $\rightarrow$ `nrow(data)` $=$ numero di soggetti: 
-
-\small
-```{r}
-id = paste0("sbj", 1:6)
-babies = data.frame(id, mesi, peso)
-```
-
-```{r echo=TRUE}
-babies
-```
-
-
-## Indicizzare i data frame 
-
-Vale tutto quello visto per le matrici: 
-
-::: columns
-
-:::: column
-Prima riga del data frame `babies`
-
-`babies[1, ]` 
-::::
-
-:::: column
-Prima colonna del data frame `babies`
-
-`babies[, 1]` 
-::::
-:::
-
-In più:
-
-```{r eval = FALSE}
-babies$mesi # colonna mesi di babies
-
-babies$mesi[2] # secondo elemento del vettore colonna
-
-babies[, "id"] # column id
-
-babies[2, ] # second row of babies (obs on baby 2)
-```
-
-Logic applies:
-
-```{r eval = FALSE}
-babies[babies$peso > 7, ] # filtra per tutte le righe con peso > 7
-babies[babies$id %in% c("sbj1", "sbj6"), ] # restituisce le osservazioni di questi due soggetti
-```
-
-
-
-## Working with data frames II
-
-```{r}
-dim(babies) # data frame con 6 righe e 3 colonne
-
-names(babies) # = colnames(babies)
-
-```
-
-
-```{r eval=FALSE}
-View(babies) # open data viewer
-
-```
-
-\vfill
-
-\footnotesize Questi comandi possono essere usati anche su altri oggetti `R`
-
 
 
