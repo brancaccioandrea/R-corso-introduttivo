@@ -253,7 +253,207 @@ read.table(file, header = FALSE, sep = "", quote = "\"'",
 `dec = "."`: Il separatore dei decimali 
 
 
+## `read.table()` in pratica I 
+
+```{r myline =60}
+tab_data = read.table("data/babies.tab")
+head(tab_data)
+```
+
+
+## `read.table()` in pratica II
+
+\small
+```{r myline =60}
+dat_data = read.table("data/CioccoRazzaBuilt.dat", 
+                      header = TRUE, sep = "\t")
+head(dat_data)
+```
+
+
+## File excel 
+
+Servono aiuti esterni (un pacchetto apposito): 
+
+`install.packages("readxl")` va digitato e fatto correre una volta nella console 
+
+
+```{r}
+library("readxl") # rende disponibile il pacchetto nell'ambiente R
+
+```
+
+
+La funzione:
+
+```{r eval = F}
+read_excel(path, sheet = NULL, range = NULL, col_names = TRUE, 
+           col_types = NULL, ...)
+```
+
+
+`path`: Il nome del file (se serve anche la sua directory)
+
+`sheet = NULL` dà la possibilità di speicificare il foglio specifico del file excel
+
+`range = NULL`: Il range specifico di celle da leggere (e.g., `B0:B13`)
+
+`col_names = TRUE`: La prima riga contiene i nomi delle variabili
+
+`col_names = NULL`: Il tipo di variabili che ci sono nelle colonne 
+
+## `read_excel()` in pratica
+
+\small
+```{r myline =60}
+benessere = read_excel("data/datiBenessere.xlsx")
+head(benessere)
+```
+
+
+## File .sav 
+
+Aiuti esterni: 
+
+
+`install.packages("foreign")` oppure `install.packages(foreign)`
+
 # Lavora con i dati 
+
+
+## Sorting
+
+\small
+
+`order()`: 
+
+```{r}
+babies[order(babies$peso), ] # sort by increasing peso
+```
+```{r eval = FALSE}
+babies[order(babies$peso,    # sort by decreasing peso
+             decreasing = T), ] 
+```
+
+Multiple arguments in `order`: 
+
+```{r eval = FALSE}
+babies[order(babies$peso, babies$months, decreasing = TRUE), ]         
+```
+
+## Aggregating
+
+Aggregate a response variable according to grouping variable(s) (e.g., averaging per experimental conditions): 
+
+```{r eval = FALSE}
+# Single response variable, single grouping variable
+aggregate(y ~ x, data = data, FUN, ...)
+
+# Multiple response variables, multiple grouping variables
+aggregate(cbind(y1, y2) ~ x1 + x2, data = data, FUN, ...)
+```
+
+## Aggregating: Example
+
+\small
+
+```{r out.lines=4}
+ToothGrowth # Vitamin C and tooth growth (Guinea Pigs)
+```
+
+```{r}
+aggregate(len ~ supp + dose, data = ToothGrowth, mean)
+```
+## Reshaping: Long to wide
+
+Data can be organized in wide format (i.e., one line for each statistical unit) or in long format (i.e., one line for each observation). 
+
+```{r out.lines = 7}
+Indometh # Long format
+```
+
+
+## Long to wide
+
+\small
+
+```{r tidy=TRUE, tidy.opts=list(width.cutoff=60), out.lines=3}
+# From long to wide
+df.w <- reshape(Indometh, v.names="conc", 
+                timevar="time",
+                idvar="Subject", direction="wide")
+```
+
+```{r out.width="70%", out.lines=8, echo = FALSE}
+df.w
+```
+
+
+## Reshaping: Wide to long
+
+\small
+
+```{r tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+# From wide to long
+df.l <- reshape(df.w, varying=list(2:12), 
+                v.names="conc", 
+                idvar="Subject", direction="long",
+times=c(.25, .5, .75, 1, 1.25, 2, 3, 4, 5, 6, 8))
+```
+
+```{r echo=FALSE, out.lines=4}
+df.l
+```
+
+```{r out.lines=4}
+df.l[order(df.l$Subject), ] # reorder by subject
+
+```
+
+
+## Combine data frames
+
+If they have the same number of columns/rows
+
+```{r eval = FALSE}
+all_data = rbind(data, data1, data2) # same columns
+all_data = cbind(data, data1, data2) # same rows
+```
+
+If they have different rows/columns but they share at least one characteristic (e.g., `ID`): 
+
+```{r eval=FALSE}
+all_data = merge(data1, data2, 
+                 by = "ID")
+```
+
+
+If there are different IDs in the two datasets $\rightarrow$ added in new rows
+
+`all_data` contains all columns in `data1` and `data2`. The columns of the IDs in `data1` but not in `data2` (and vice versa) will be filled with `NA`s accordingly
+
+## Export data
+
+Writing text (or csv) file: 
+
+```{r eval=FALSE}
+write.table(data, # what you want to write 
+            file = "mydata.txt", # its name + extension
+            header = TRUE, # first row with col names?
+            sep = "\t",  # column separator 
+            ....) # other arguments
+```
+
+`R` environment (again): 
+
+```{r eval=FALSE}
+save(dat, file = "exp1_data.rda") # save something specific 
+save(file = "the_earth.rda")      # save the environment
+load("the_earth.rda")             # load it back
+```
+
+
+## 
 
 # Esporta i dati 
 
