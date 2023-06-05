@@ -86,9 +86,15 @@ library(knitr)
 ## Materiale del corso 
 
 ```{r out.width="40%", fig.align='center', echo=FALSE}
-knitr::include_graphics("img/qr-code.png")
+knitr::include_graphics("img/coRso.png")
 ```
  
+\
+
+\centering 
+
+`https://ottaviae.github.io/coRso/`
+
 
 # PeRché?
 
