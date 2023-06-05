@@ -158,6 +158,13 @@ my_data$genere = norm2likert(my_data$genere, prob = c(.49, .51),
 
 ##
 
+
+```{r echo = F}
+benessere = read.csv("data/benessereScores.csv", 
+                     sep = ",", header = TRUE)
+```
+
+
 - Grafici base
 - Grid graphics \& `ggplot2`
 
@@ -257,38 +264,84 @@ mtext(paste("Side", 1:4), side=1:4, line=-1, font=2)
 
 ## Modificare il layout dei plot 
 
-Per ottenere 4 pannelli:
+Vanno creati dei pannelli
 
-```{r eval=FALSE}
-par(mfrow=c(2,2)) # i pannelli vengono riempiti in riga
-par(mfcol=c(2,2)) # i pannelli vengono riempiti in colonna 
+\small
+
+```{r eval=FALSE, myline = 80}
+par(mfrow=c(nrighe, ncolonne)) # i pannelli vengono riempiti in riga
+par(mfcol=c(nrighe, ncolonne)) # i pannelli vengono riempiti in colonna 
+```
+
+## `plot()`
+
+```{r eval = FALSE}
+plot(x) # solo una variabile
+plot(x, y) # due variabile (scatter plot)
+plot(y ~ x) # due variabile, y in funzione di x
 ```
 
 
-## `hist()`
+## Esempi: `plot(x)`
 
-```{r echo = F}
-benessere = read.csv("data/benessereScores.csv", 
-                     sep = ",", header = TRUE)
+```{r}
+with(benessere, 
+     plot(score_au, 
+          col = ifelse(genere == 1, "blue", "pink"), 
+          pch = ifelse(genere == 1, 3, 16)))
+legend(x = 115, y = 48, 
+       c("Maschi", "Femmine"), pch = c(3, 16), col =c("blue", "pink"), cex = 2)
 ```
 
 
-Produce un istogramma: 
+## Esempi: `plot(x, y)`
 
-::: columns
+```{r}
+with(benessere, 
+     plot(score_au, score_ben))
 
-:::: column
+```
 
-Frequenze: 
+## Esempi: `plot(y ~ x)`
+
+```{r}
+with(benessere, 
+     plot(score_ben ~ score_au))
+```
+
+
+
+## Esempi: `plot(y ~ x)` con retta di regressione
+
+```{r}
+with(benessere, 
+     plot(score_ben ~ score_au))
+abline(lm(score_ben ~ score_au, data = benessere), 
+          col = "blue", lty = 3, lwd = 3)
+```
+
+
+## Esempi: `plot(y ~ x)` con x categoriale
+
+```{r}
+benessere$genere <- factor(ifelse(benessere$genere == 1, 
+                           "maschio", "femmina"))
+plot(score_au ~ genere, data = benessere)
+
+```
+
+
+
+## `hist()`: Frequenze
+
 \scriptsize
 ```{r}
 hist(benessere$score_au)
 ```
 
 
-::::
+## `hist()`: Densità
 
-:::: column
 Densità
 \scriptsize
 ```{r}
@@ -297,28 +350,105 @@ hist(benessere$score_au,
      prob=TRUE, col = "darkblue")
 ```
 
-::::
-
-:::
-
 
 
 ## Multi plot (in riga)
 
-```{r}
-par(mfrow=c(2,2))
+\footnotesize
 
-hist(benessere$score_au,density=50, breaks=20, prob=TRUE)
+```{r eval = FALSE}
+par(mfrow=c(1, 2))
+
+hist(benessere$score_au,density=50, breaks=20, prob=TRUE, 
+     main = "Score au")
 curve(dnorm(x, mean=mean(benessere$score_au), 
             sd=sd(benessere$score_au)), 
-      col="darkblue", lwd=2, add=TRUE, yaxt="n")
+      col="springgreen4", lwd=2, add=TRUE, yaxt="n")
 
-hist(benessere$score_au,density=50, breaks=20, prob=TRUE)
-curve(dnorm(x, mean=mean(benessere$score_au), 
-            sd=sd(benessere$score_au)), 
-      col="darkblue", lwd=2, add=TRUE, yaxt="n")
+[...]
 
 ```
+
+
+
+```{r echo = FALSE}
+par(mfrow=c(2, 2))
+
+hist(benessere$score_au,density=50, breaks=20, prob=TRUE, 
+     main = "Score au")
+curve(dnorm(x, mean=mean(benessere$score_au), 
+            sd=sd(benessere$score_au)), 
+      col="springgreen4", lwd=2, add=TRUE, yaxt="n")
+
+hist(benessere$score_ben,density=50, breaks=20, prob=TRUE, 
+     main = "Score benessere")
+curve(dnorm(x, mean=mean(benessere$score_ben), 
+            sd=sd(benessere$score_ben)), 
+      col="royalblue", lwd=2, add=TRUE, yaxt="n")
+
+```
+
+
+
+
+
+## Multiplot (in colonna)
+
+
+```{r echo = FALSE}
+par(mfcol= c(2,2))
+hist(benessere$score_au,density=50, breaks=20, prob=TRUE, 
+     main = "Score au")
+curve(dnorm(x, mean=mean(benessere$score_au), 
+            sd=sd(benessere$score_au)), 
+      col="springgreen4", lwd=2, add=TRUE, yaxt="n")
+
+hist(benessere$score_ben,density=50, breaks=20, prob=TRUE, 
+     main = "Score benessere")
+curve(dnorm(x, mean=mean(benessere$score_ben), 
+            sd=sd(benessere$score_ben)), 
+      col="royalblue", lwd=2, add=TRUE, yaxt="n")
+
+with(benessere, 
+     plot(score_au, score_ben, frame = FALSE))
+
+
+with(benessere, 
+     plot(score_au, score_ben, frame = FALSE))
+abline(lm(score_ben ~ score_au, data = benessere), col = "blue", lwd = 2)
+
+
+```
+
+
+## Multiplot (in colonna), codice
+
+
+```{r echo = T, eval = FALSE}
+par(mfcol= c(2,2))
+hist(benessere$score_au,density=50, breaks=20, prob=TRUE, 
+     main = "Score au")
+curve(dnorm(x, mean=mean(benessere$score_au), 
+            sd=sd(benessere$score_au)), 
+      col="springgreen4", lwd=2, add=TRUE, yaxt="n")
+
+hist(benessere$score_ben,density=50, breaks=20, prob=TRUE, 
+     main = "Score benessere")
+curve(dnorm(x, mean=mean(benessere$score_ben), 
+            sd=sd(benessere$score_ben)), 
+      col="royalblue", lwd=2, add=TRUE, yaxt="n")
+
+with(benessere, 
+     plot(score_au, score_ben, frame = FALSE))
+
+
+with(benessere, 
+     plot(score_au, score_ben, frame = FALSE))
+abline(lm(score_ben ~ score_au, data = benessere), col = "blue", lwd = 2)
+
+
+```
+
 
 
 
