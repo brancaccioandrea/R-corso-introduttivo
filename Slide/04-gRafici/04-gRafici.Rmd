@@ -330,6 +330,16 @@ plot(score_au ~ genere, data = benessere)
 
 ```
 
+## Attenzione!
+
+`plot(y ~ x)` con x categoriale è uguale a `boxplot(y ~ x)`
+
+
+```{r}
+boxplot(score_au ~ genere, data = benessere)
+```
+
+
 
 
 ## `hist()`: Frequenze
@@ -449,7 +459,9 @@ abline(lm(score_ben ~ score_au, data = benessere), col = "blue", lwd = 2)
 
 ```
 
+## `interaction.plot()`
 
+Permette di vedere l'interazione tra due variabili metrice a seconda di una variabile categoriale 
 
 
 # `ggplot2`
