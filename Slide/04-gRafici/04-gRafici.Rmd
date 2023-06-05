@@ -1,5 +1,5 @@
 ---
-title: "Working with dataframes"
+title: "04-gRafici"
 date: '8-9 giugno 2023'
 author: |
   | Ottavia M. Epifania
@@ -11,7 +11,7 @@ output:
     colortheme: spruce
     highlight: kate
 header-includes:
-    - \AtBeginDocument{\title[wo\texttt{R}king]{Working with dataframes}}
+    - \AtBeginDocument{\title[g\texttt{R}afici]{04-g\texttt{R}afici}}
     - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
     - \AtBeginDocument{\date[8-9 Giugno]{8-9 Giugno 2023}}
     - \AtBeginDocument{\institute[Lezioni UniCatt]{Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)}}
@@ -155,7 +155,132 @@ my_data$genere = norm2likert(my_data$genere, prob = c(.49, .51),
 
 \tableofcontents
 
-# Importa i dati 
+
+##
+
+- Grafici base
+- Grid graphics \& `ggplot2`
+
+Entrambi: 
+
+- High level functions $\rightarrow$ le funzioni che producono effettivamente il grafico
+- Low level functions $\rightarrow$ Le funzioni che lo rendono più "bello"
+
+# Grafici tradizionali
+
+## High level functions
+
+
+
+```{r eval = FALSE}
+plot()      # scatter plot, specialized plot methods
+boxplot()
+hist()      # histogram
+qqnorm()    # quantile-quantile plot
+barplot()
+pie()       # pie chart
+pairs()     # scatter plot matrix
+persp()     # 3d plot
+contour()   # contour plot
+coplot()    # conditional plot
+interaction.plot()
+```
+
+
+`demo(graphics)` vi fonrisce un tour guidato dei grafici
+
+## Low level functions
+
+
+
+```{r eval = FALSE}
+points()  # Aggiunge punti al grafico
+lines()   # Aggiunge linee  al grafico 
+rect()
+polygon()
+abline() # aggiunge una riga con intercetta a e pendenza b
+arrows() # aggiunge barre d'errore     
+text()   # aggiunge testo nel plot
+mtext()  # aggiunge testo nei margini
+axis()   # personalizza gli assi
+box()    # box attorno al grafico 
+legend() # cambia parametri della legenda
+```
+
+## Plot layout
+
+Ogni plot è composto da due regioni:
+
+- Plotting region (dove effettivamente sta il plot)
+- La regione dei margini (contiene i margini e le varie etichette degli assi)
+
+\pause
+
+\small
+
+A scatter plot: 
+
+```{r eval = FALSE}
+x <- runif(50, 0, 2) # 50 numeri random 
+y <- runif(50, 0, 2) # da una dsitr. uniforme
+plot(x, y, main="Titolo", 
+     sub="Sottotitolo", xlab="x-label",
+     ylab="y-label") # ecco il plot
+```
+
+
+
+
+```{r eval = FALSE}
+text(0.6, 0.6, "Text at (0.6, 0.6)")
+abline(h=.6, v=.6, lty=2) # horizont. and vertic. 
+                          # lines
+```
+
+## Margins region 
+
+\small
+
+```{r eval=TRUE, echo=FALSE, out.width="100%"}
+x <- runif(50, 0, 2) # 50 uniform random numbers
+y <- runif(50, 0, 2)
+plot(x, y, main="Title", 
+     sub="Subtitle", xlab="x-label",
+     ylab="y-label", cex.lab=1.5) # produce plotting window
+text(0.6, 0.6, "Text at (0.6, 0.6)")
+abline(h=.6, v=.6, lty=2) # horiz. and vert. lines
+
+for(side in 1:4) mtext(-1:4, side=side, at=.7, line=-1:4)
+mtext(paste("Side", 1:4), side=1:4, line=-1, font=2)
+```
+
+
+# `ggplot2`
+
+# Esportare i grafici
+
+## Esportare i grafici
+
+
+```{r eval = F}
+postscript()  # vector graphics
+pdf()
+
+png()          # bitmap graphics
+tiff()
+jpeg()
+bmp()
+```
+
+
+Remember to run off the graphic device once you've saved the graph:
+
+```{r eval=FALSE}
+dev.off()
+```
+
+(You can do it also manually)
+
 
 ## 
 

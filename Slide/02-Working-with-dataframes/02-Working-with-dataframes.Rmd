@@ -1,5 +1,5 @@
 ---
-title: "Working with dataframes"
+title: "WoRking with data frames"
 date: '8-9 giugno 2023'
 author: |
   | Ottavia M. Epifania
@@ -11,7 +11,7 @@ output:
     colortheme: spruce
     highlight: kate
 header-includes:
-    - \AtBeginDocument{\title[wo\texttt{R}king]{Working with dataframes}}
+    - \AtBeginDocument{\title[wo\texttt{R}king]{02-Wo\texttt{R}king with data frames}}
     - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
     - \AtBeginDocument{\date[8-9 Giugno]{8-9 Giugno 2023}}
     - \AtBeginDocument{\institute[Lezioni UniCatt]{Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)}}
@@ -454,7 +454,7 @@ A qui (wide format):
 
 ## `reshape()`
 
-Per girare il dataset si utilizza la funzione reshape
+Per girare il data set si utilizza la funzione reshape
 
 Sempre meglio sapere come sono fatti i dati per evitare sorprese: 
 \footnotesize
@@ -464,12 +464,12 @@ levels(Indometh$Subject) # quanti soggetti ho?
 
 table(Indometh$Subject) # quante osservazioni ho per soggetto? 
 
-nrow(Indometh) # quante righe ha il mio dataset?
+nrow(Indometh) # quante righe ha il mio data set?
 ```
 
 ##
 
-Ci aspettiamo un dataframe a 6 righe e con 11 colonne $+$ la colonna con gli id dei soggetti:  
+Ci aspettiamo un data frame a 6 righe e con 11 colonne $+$ la colonna con gli id dei soggetti:  
 
 \small
 
@@ -520,16 +520,16 @@ df.l
 ```
 
 
-## Unire dataset 
+## Unire data set 
 
-Se i dataset hanno lo stesso numero di colonne **con lo stesso nome**
+Se i data set hanno lo stesso numero di colonne **con lo stesso nome**
 
 ```{r eval = FALSE}
 all_data = rbind(data, data1, data2, ...) 
 
 ```
 
-Se i dataset hanno lo stesso numero di righe: 
+Se i data set hanno lo stesso numero di righe: 
 
 ```{r eval = FALSE}
 all_data = cbind(data, data1, data2, ...) 
@@ -538,7 +538,7 @@ all_data = cbind(data, data1, data2, ...)
 
 ## 
 
-Se i dataset hanno numeri diversi di righe e/o colonne, ma hanno almeno una caratteristica in comune (e.g., `id`) $\rightarrow$ `merge()`
+Se i data set hanno numeri diversi di righe e/o colonne, ma hanno almeno una caratteristica in comune (e.g., `id`) $\rightarrow$ `merge()`
 
 
 ```{r eval=FALSE}
@@ -547,7 +547,7 @@ all_data = merge(data1, data2,
 ```
 
 
-All'argomento `by` si può passare anche un vettore di character che indica secondo quale variabile vogliamo che vengano uniti i dataset
+All'argomento `by` si può passare anche un vettore di character che indica secondo quale variabile vogliamo che vengano uniti i data set
 
 
 ## `merge()`: Un esempio 
@@ -596,7 +596,7 @@ merge(babies, baby_detail)
 
 
 
-## Attenzione! Dataset con id diversi
+## Attenzione! data set con id diversi
 
 \small
 
@@ -628,8 +628,180 @@ merge(babies, new_baby,
       all = T)
 ```
 
+## Aggiungere una nuova variabile 
+
+Basta utilizzare il `$` e creare una nuova variabile: 
+
+\footnotesize
+```{r out.lines = 6}
+babies$termmine <- sample(rep(c("si", "no"), 
+                              c(nrow(babies)/2, nrow(babies)/2)))
+babies
+```
+
+\normalsize
+Per eliminare una colonna: 
+
+::: columns
+
+:::: column
+\scriptsize
+```{r out.lines = 4}
+babies[, -3]
+```
+
+::::
+
+:::: column
+\scriptsize
+```{r out.lines = 4}
+babies$peso = NULL
+babies
+```
+
+::::
+
+:::
 
 
+## Creare nuove variabili "condizionate"
+
+`ifelse(test, vero, falso)`
+
+Ad esempio: 
+
+```{r}
+ifelse(babies$altezza > mean(babies$altezza), # test
+       "alti", # se vero
+       "bassi") # se falso 
+
+
+```
+
+
+## Check
+
+\footnotesize
+
+```{r echo = FALSE}
+babies$altezza_media = mean(babies$altezza)
+babies$altezza_dicotomico = ifelse(babies$altezza > mean(babies$altezza), # test
+       "alti", # se vero
+       "bassi")
+babies
+```
+
+
+## Calcolare i punteggi di scala 
+
+Assumendo di avere il data set in formato wide: 
+
+- Sommando attraverso le variabili (colonne) $\rightarrow$ punteggio di scala per le persone 
+
+> `rowSums()` (oppure `rowMean()` se si vuole usare la media)
+
+- Sommando attraverso le persone (righe) $\rightarrow$ punteggi sugli item 
+
+> `colSums()` (oppure `colMean()` se si vuole usare la media)
+
+
+## Dati benessere 
+
+
+\small
+```{r mylin = 50}
+library(readxl)
+benessere = read_xlsx("data/datiBenessere.xlsx")
+
+head(benessere,2)
+
+```
+
+\normalsize
+
+Se proviamo ad applicare `rowSums()` : 
+
+\small
+
+```{r}
+rowSums(benessere)
+```
+
+Non ha molto senso vero?
+
+
+## Condizionare ai nomi delle variabili 
+
+è necessario che le variabili abbiano una radice comune: 
+
+```{r myline=50}
+colnames(benessere)
+```
+
+Le colonne con la radice `item` sono gli item che misurano il benessere, quelli con radice `au` misurano un'altra variabile 
+
+## 
+
+Le funzioni `grep()`e `grepl()` permettono di filtrare gli oggetti sulla base di una `reg`ular `exp`ression (`regex`)
+
+\begin{center}
+\texttt{grep("regex", vettore)}
+\end{center}
+
+Il funzionamento è il medesimo, differiscono nel loro risultato
+
+\footnotesize
+
+```{r myline = 80}
+(my_vector = colnames(benessere))
+```
+
+`grep()`
+
+```{r}
+grep("au", my_vector)
+```
+
+`grepl()`
+
+```{r}
+grepl("au", my_vector)
+```
+
+## Tornando al calcolo di scala
+
+Bisogna condizionare `rowSums()` a calcolare le somme solo per certe colonne: 
+
+\small
+```{r myline = 60}
+cat(rowSums(benessere[, grep("item", colnames(benessere))])[1:15], "...")
+```
+
+Si può assegnare a una nuova variabile nel data frame di partenza: 
+
+```{r}
+benessere$score_ben = rowSums(benessere[, grep("item", colnames(benessere))])
+```
+
+
+
+## Your turn! 
+
+
+```{r echo = FALSE, fig.align='center', out.width="19%"}
+knitr::include_graphics("img/work.png")
+```
+
+
+- Creare una variabile dicotomica dal data set benessere partendo dalla variabile `frat`
+
+> 0 fratelli $\rightarrow$ figlio_unico
+>
+> 1+ $\rightarrow$ sibling
+
+- Calcolate il punteggio di scala della scala composta dagli item `au` e assegnatelo a una nuova variabile `score_au`
+
+- create un nuovo data set `score` che contenga `ID`, `età`, `genere`, `score_ben` e `score_au`
 
 # Esporta i dati
 
@@ -637,8 +809,8 @@ merge(babies, new_baby,
 
 File (csv) o text:
 
-```{r eval=FALSE}
-write.table(data, # il dataframe
+```{r eval=FALSE, myline = 80}
+write.table(data, # il data frame
             file = "mydata.txt", # il nome che si vuol dare + estensione
             header = TRUE, 
             sep = "\t", 
@@ -654,31 +826,22 @@ load("the_earth.rda")             # re-importa l'environment
 ```
 
 
+## Your turn! 
 
-## Aggregating
 
-Aggrega una variabile "dipendente" a seconda di una serie di variabili dipendenti e vi applica una funzione
+```{r echo = FALSE, fig.align='center', out.width="19%"}
+knitr::include_graphics("img/work.png")
+benessere$score_au = rowSums(benessere[, grep("au", colnames(benessere))])
+write.table(benessere, file = "data/benessereScores.csv", sep =",", 
+            row.names = F)
 
-Aggregate a response variable according to grouping variable(s) (e.g., averaging per experimental conditions): 
-
-```{r eval = FALSE}
-# Una variabile dipendente (y) e pi single grouping variable
-aggregate(y ~ x, data = data, FUN, ...)
-
-# Multiple response variables, multiple grouping variables
-aggregate(cbind(y1, y2) ~ x1 + x2, data = data, FUN, ...)
+score = benessere[, c("ID", "età", "genere", "score_ben", "score_au")]
+write.table(benessere, file = "data/score.tab")
 ```
 
-## Aggregating: Example
+- Esportate il data set `benessere`con i due score calcolati e aggiunti come nuove variabili in fondo in formato `csv`
 
-\small
+- Esportate il data set `score` in formato `tab`
 
-```{r out.lines=4}
-ToothGrowth # Vitamin C and tooth growth (Guinea Pigs)
-```
-
-```{r}
-aggregate(len ~ supp + dose, data = ToothGrowth, mean)
-```
 
 

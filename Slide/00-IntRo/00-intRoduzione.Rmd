@@ -1,5 +1,5 @@
 ---
-title: "Un'int`R`oduzione"
+title: "00-Int`R`oduzione"
 date: '8-9 giugno 2023'
 author: |
   | Ottavia M. Epifania
@@ -11,7 +11,7 @@ output:
     colortheme: spruce
     highlight: kate
 header-includes:
-    - \AtBeginDocument{\title[co\texttt{R}so]{Un'int\texttt{R}oduzione}}
+    - \AtBeginDocument{\title[co\texttt{R}so]{00-Int\texttt{R}oduzione}}
     - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
     - \AtBeginDocument{\date[8-9 Giugno]{8-9 Giugno 2023}}
     - \AtBeginDocument{\institute[Lezioni UniCatt]{Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)}}
@@ -46,7 +46,6 @@ header-includes:
              \frametitle{Table of Contents}
              \tableofcontents[currentsection]
               \end{frame}
-          }
 editor_options: 
   chunk_output_type: console
 ---

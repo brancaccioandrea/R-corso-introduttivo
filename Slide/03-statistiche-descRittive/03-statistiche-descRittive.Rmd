@@ -1,0 +1,551 @@
+---
+title: "03-descRivi i dati"
+subtitle: "(e programma un pochino)"
+date: '8-9 giugno 2023'
+author: |
+  | Ottavia M. Epifania
+  | Università di Padova
+institute: "Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)"
+output: 
+  beamer_presentation: 
+#    theme: Singapore
+    colortheme: spruce
+    highlight: kate
+header-includes:
+    - \AtBeginDocument{\title[desc\texttt{R}ittive]{03-desc\texttt{R}ivi i dati}}
+    - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
+    - \AtBeginDocument{\date[8-9 Giugno]{8-9 Giugno 2023}}
+    - \AtBeginDocument{\institute[Lezioni UniCatt]{Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)}}
+    - \useinnertheme{circles}
+    - \usetheme[compressed]{Singapore}
+    - \usepackage{graphicx} 
+    - \usepackage{setspace}
+    - \usepackage{tikzsymbols}
+    - \usepackage{tabularx}
+    - \usepackage[english]{babel}
+    - \usepackage{tikzsymbols}
+    - \usepackage{subcaption}
+    - \usepackage{tikz}
+    - \usepackage{spot}
+    - \usepackage{tabularx}
+    - \usepackage[absolute,overlay]{textpos}
+    - \usepackage{booktabs}
+    - \newcommand\Factor{1.2}
+    - \setbeamerfont{subtitle}{size=\large, series=\bfseries}
+    - \definecolor{template}{RGB}{155, 0, 20}
+    - \definecolor{background}{RGB}{250, 250, 250}
+    - \setbeamercolor{frametitle}{bg=background}
+    - \setbeamertemplate{frametitle}{\color{template}\bfseries\insertframetitle\par\vskip-6pt\hrulefill}
+    - \AtBeginSection{\frame{\sectionpage}}
+    - \setbeamercolor{section name}{fg=white}
+    - \setbeamercolor{title}{fg=template, bg=background}
+    - \setbeamercolor{section title}{fg=template}
+    - \setbeamercolor{frame subtitle}{fg=template}
+    - \setbeamercolor{title}{fg=template}
+    - \setbeamercolor{background canvas}{bg=background}
+    - \setbeamersize{text margin left=5mm,text margin right=5mm}
+    - \setbeamercolor{section in head/foot}{bg=background, fg=template}
+    - \setbeamercolor{subsection in head/foot}{fg=template, bg=template!20}
+    - \AtBeginSection[]
+          {
+             \begin{frame}[plain]
+             \frametitle{Table of Contents}
+             \tableofcontents[currentsection]
+              \end{frame}
+          }
+editor_options: 
+  chunk_output_type: console
+---
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE, 
+                      eval = TRUE, 
+                      message = FALSE, 
+                      comment="", 
+                      tidy=FALSE, 
+                      warning = FALSE, 
+                      fig.align = "center", 
+                      out.width = "70%")
+
+
+library(ggplot2)
+library(gridExtra)
+library(tidyverse)
+# hook_output <- knitr::knit_hooks$get("output")
+# knitr::knit_hooks$set(output = function(x, options) {
+# if (!is.null(n <- options$out.lines)) {
+# x <- xfun::split_lines(x)
+# if (length(x) > n) {
+# # truncate the output
+# x <- c(head(x, n), "....\n")
+# } 
+# x <- paste(x, collapse = "\n")
+# } 
+# hook_output(x, options)
+# })
+
+library(knitr)
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$myline)) {
+    x = xfun::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  } else if (!is.null(n <- options$out.lines)) {
+x <- xfun::split_lines(x)
+if (length(x) > n) {
+# truncate the output
+x <- c(head(x, n), "....\n")
+}
+x <- paste(x, collapse = "\n")
+}
+  hook_output(x, options)
+})
+set.seed(9999)
+library(knitr)
+library(faux)
+
+babies = rnorm_multi(n = 10, 
+                     varnames = c("genere", "peso", "altezza"),
+                     mu = c(0, 8, 80), 
+                     sd = c(1, 4, 10), 
+                     r = c(.30, .50, .80), 
+                     empirical = F)
+babies$id = paste("baby", 1:nrow(babies), sep ="")
+babies = babies[, c("id", "genere", "peso", "altezza")]
+babies$genere = norm2likert(babies$genere, 
+                            prob = c(.50, .50), 
+                            labels = c("m", "f"))
+babies$peso = norm2gamma(babies$peso, 
+                         10, 1)
+
+
+
+
+dataTol <- rnorm_multi(n = 100, 
+                  mu = c(0, 20, 20),
+                  sd = c(1, 5, 5),
+                  r = c(0.5, 0.5, 0.8), 
+                  varnames = c("A", "B", "C"),
+                  empirical = FALSE)
+dataTol$A = (norm2likert(dataTol$A, c(.17, .17, .17, .17, .17, .17)))
+dataTol$B = norm2binom(dataTol$B, size = 1, prob = .90)
+dataTol$C = norm2gamma(dataTol$C, shape = 2, rate = 4)
+
+# prendo la correlazione dei dati Tol che ho e simulo dei dati nuovi a partire da quelli 
+
+my_data = rnorm_multi(n = 100, 
+                      mu = c(10, 1000, 5), 
+                      sd = c(4, 500, 1), 
+                      r = c(.80, .30, 0.0), 
+                      varnames = c("benessere", "stipendio", "genere"))
+my_data$benessere = norm2pois(my_data$benessere, 
+                              5)
+my_data$stipendio = norm2trunc(my_data$stipendio, 
+                               min = 300)
+my_data$genere = norm2likert(my_data$genere, prob = c(.49, .51), 
+                             labels = c("m", "f"))
+```
+
+
+
+
+## Table of contents {.plain}
+
+\tableofcontents
+
+# Come sono i dati
+
+## `summary()`
+
+`summary()` è un funzione applicata a diversi oggetti `R`, dai data set agli oggetti che contengono i risultati delle analisi (e.g., modelli lineari, t test, ecc.)
+
+Può essere applicato ai dati qualitativi e quantitaivi:
+
+\small
+
+```{r}
+babies <- read.table("data/babies.tab")
+summary(babies$peso)
+```
+
+
+## 
+
+O a data set interi:
+
+```{r}
+summary(babies)
+```
+
+
+## `table()`
+
+Crea delle tabelle di frequenza
+
+Applicabile a una singola variabile:
+
+```{r}
+table(babies$genere)
+```
+
+
+##
+
+O per costruire tavole di contingenza: 
+
+\small
+```{r}
+
+benessere = read.csv("data/benessere.csv", header = T)
+# creo una nuova variabile dicotomica per descrivere 
+# il livello di benessere
+benessere$new_benessere = with(benessere, 
+                               ifelse(benessere > mean(benessere), 
+                                      "alto", 
+                                      "basso"))
+with(benessere, table(new_benessere, genere))
+
+```
+
+## `table()` e le percentuali 
+\small 
+
+Caso semplice:
+
+```{r}
+(table(babies$genere)/nrow(babies))*100
+```
+
+Un po' più difficile: 
+
+```{r}
+my_perc = with(benessere, table(new_benessere, genere))
+(my_perc = cbind(my_perc, rowSums(my_perc)))
+
+```
+
+##
+
+```{r}
+# ta-dan!
+my_perc/my_perc[,3]
+```
+
+
+
+## Aggregating
+
+Aggrega una variabile "dipendente" a seconda di una serie di variabili dipendenti e vi applica una funzione
+
+```{r eval = FALSE}
+# Una variabile dipendente (y) e una grouping variable (x)
+aggregate(y ~ x, data = data, FUN, ...)
+
+# Più variabili dipendenti e più variabili indipendenti
+aggregate(cbind(y1, y2) ~ x1 + x2, data = data, FUN, ...)
+```
+
+
+## Aggregating
+
+Aggrega una variabile "dipendente" a seconda di una serie di variabili dipendenti e vi applica una funzione
+
+Aggregate a response variable according to grouping variable(s) (e.g., averaging per experimental conditions): 
+
+```{r eval = FALSE}
+# Una variabile dipendente (y) e single grouping variable
+aggregate(y ~ x, data = data, FUN, ...)
+
+# Multiple response variables, multiple grouping variables
+aggregate(cbind(y1, y2) ~ x1 + x2, data = data, FUN, ...)
+```
+
+## Aggregating: Esempi
+
+Importiamo il data set del benessere con gli scoring fatti da noi: 
+
+\scriptsize
+```{r}
+dati = read.csv("data/benessereScores.csv", header = T, sep =",")
+```
+
+
+\normalsize 
+
+Calcoliamo la media a seconda del genere: 
+
+```{r}
+aggregate(score_au ~ genere, data = dati, mean)
+```
+
+Calcoliamo la media di entrambi gli score a seconda del genere:
+
+```{r}
+aggregate(cbind(score_ben, score_au) ~ genere, data = dati, mean)
+```
+
+## Your turn! 
+
+
+```{r echo = FALSE, fig.align='center', out.width="15%"}
+knitr::include_graphics("img/work.png")
+```
+
+\small
+
+- Ricodificate `frat` e assegnatela a una nuova variabile del data frame (`siblings`:
+> 0 fratelli $\rightarrow$ no
+>
+> 1+ $\rightarrow$ yes
+
+- Calcolate la media di `score_ben` a seconda di `siblings`
+
+- Calcolate media  di `score_ben` e `score_au` a seconda di `sibilings`e genere (assegnatelo a `mean_dep`)
+
+- Calcolate deviazione standard  di `score_ben` e `score_au` a seconda di `sibilings`e `genere` (assegnatelo a `sd_dep`)
+
+- unite `mean_dep` e `sd_dep` in un unico oggetto, `descr`
+
+
+\begin{alertblock}{Attenzione!}
+
+Non tutte le colonne devono avere lo stesso nome \small quando usate merge
+
+\end{alertblock}
+
+
+## Risultato:
+
+\footnotesize
+
+```{r echo = FALSE, myline = 80}
+
+dati$siblings = ifelse(dati$frat == 0, "no", "yes")
+
+mean_dep = aggregate(cbind(score_ben, score_au) ~ siblings + genere, 
+                     data = dati, mean)
+colnames(mean_dep)[3:4] = paste("mean", colnames(mean_dep)[3:4], sep = "_")
+sd_dep = aggregate(cbind(score_ben, score_au) ~ siblings + genere, 
+                     data = dati, sd)
+colnames(sd_dep)[3:4] = paste("sd", colnames(sd_dep)[3:4], sep =  "_")
+
+descr = merge(mean_dep, sd_dep)
+
+```
+
+
+
+```{r}
+descr
+```
+
+
+## Soluzione
+
+\footnotesize
+
+
+```{r eval = FALSE}
+dati$siblings = ifelse(dati$frat == 0, "no", "yes")
+
+mean_dep = aggregate(cbind(score_ben, score_au) ~ siblings + genere, 
+                     data = dati, 
+                     mean)
+colnames(mean_dep)[3:4] = paste("mean", 
+                                colnames(mean_dep)[3:4], 
+                                sep = "_")
+sd_dep = aggregate(cbind(score_ben, score_au) ~ siblings + genere, 
+                     data = dati, 
+                   sd)
+colnames(sd_dep)[3:4] = paste("sd", colnames(sd_dep)[3:4], 
+                              sep =  "_")
+
+descr = merge(mean_dep, sd_dep)
+```
+
+
+## Soluzione alternativa: `tidyverse()`
+
+```{r eval = FALSE}
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+
+
+`R` appositamente per data science
+
+All'inizio è un po' ostico ma poi rende la vota più semplice
+
+\pause 
+
+\begin{center}
+
+\texttt{%>%} (Pipe)
+
+\end{center}
+
+
+Si ottiene con la combo di tasti `shift + ctrl + M`
+
+La logica: 
+
+
+```{r eval = FALSE}
+oggetto %>%  
+  funzione
+```
+
+## Le nostre statistiche descrittive
+
+
+```{r}
+dati %>%  
+  group_by(siblings, genere) %>% 
+  summarise(m_benessere = mean(score_ben), 
+            sd_benessere = sd(score_ben), 
+            m_au = mean(score_au), 
+            sd_au = sd(score_au))
+```
+
+
+## Your turn! 
+
+
+```{r echo = FALSE, fig.align='center', out.width="15%"}
+knitr::include_graphics("img/work.png")
+```
+
+- Con i dati del benessere: Calcolate minimo, massimo e mediana di `score_au` e `score_ben` utilizzando `tidyverse`
+
+- Importate i dati dei babies e calcolate le decsrittive del peso e dell'altezza con `tidyverse`
+
+# Basi di programmazione
+
+## 
+
+
+Siate pront* a sbagliare (anche tanto)
+
+Coding is ~~hard~~ art
+
+Eyes on the prize, ma portate pazienza e smontate l'obiettivo in sotto obiettivi raggiungibili 
+
+You'll never walk alone $\rightarrow$ `stackoverflow` 
+
+La regola d'oro: 
+
+\begin{center}
+
+10 minutes of coding = 10 hours of debugging
+
+\end{center}
+
+
+## `ifelse()`
+
+Esecuzione condizionale: 
+
+Easy: `ifelse(test, if true, if false)` 
+
+```{r eval=FALSE}
+ifelse(babies$peso > 7, "big boy", "small boy")
+```
+\begin{exampleblock}{Pro}
+
+- è super facile da usare
+
+- Si possono embeddare diversi \texttt{ifelse()}
+\end{exampleblock}
+
+
+\begin{alertblock}{Contro}
+
+- Funziona bene se non si vuole testare un valore specifico
+\end{alertblock}
+
+## `if () {} else {}`
+
+Se si ha solo una condizione: 
+
+```{r eval = FALSE}
+if (test_1) {
+  command_1
+} else {
+  command_2
+}
+```
+
+## `if () {} else if () {}`
+
+Più condizioni
+
+```{r eval = FALSE}
+if (test_1) {
+  command_1
+} else if (test_2) {
+  command_2
+} else {
+  command_3
+}
+```
+
+`test_1` (ed eventualmente `test_2`) **devono** essere `TRUE` o `FALSE`
+
+```{r eval = FALSE}
+if(!is.na(x)) y <- x^2 else stop("x is missing")
+```
+
+
+## Loops 
+
+`for()` 
+
+Ripete un comando per una quantità di volte definite dall'utente:
+
+```{r eval = FALSE}
+# Don't do this at home
+x <- rnorm(10)      
+y <- numeric(10)   # crea un contentitore vuoto
+for(i in seq_along(x)) {
+y[i] <- x[i] - mean(x)
+}
+```
+
+\pause
+
+La soluzione migliore:
+
+```{r eval=FALSE}
+y = x - mean(x)
+```
+
+## Evitate i loop
+
+Don't loop, `apply()`! 
+
+`apply()`
+
+
+```{r eval = T, tidy=FALSE}
+X <- matrix(rnorm(20),
+            nrow = 5, ncol = 4)
+apply(X, 2, max) # trova il massimo per ogni colonna
+```
+
+\pause
+
+`for()`
+
+```{r eval =F}
+y = NULL
+for (i in 1:ncol(X)) {
+  y[i] = max(X[, i])
+}
+```
+
+
+

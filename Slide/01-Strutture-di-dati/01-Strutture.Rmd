@@ -1,5 +1,5 @@
 ---
-title: "stRutture di dati"
+title: "01-stRutture di dati"
 date: '8-9 giugno 2023'
 author: |
   | Ottavia M. Epifania
@@ -11,7 +11,7 @@ output:
     colortheme: spruce
     highlight: kate
 header-includes:
-    - \AtBeginDocument{\title[st\texttt{R}utture]{st\texttt{R}utture di dati}}
+    - \AtBeginDocument{\title[st\texttt{R}utture]{01-st\texttt{R}utture di dati}}
     - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
     - \AtBeginDocument{\date[8-9 Giugno]{8-9 Giugno 2023}}
     - \AtBeginDocument{\institute[Lezioni UniCatt]{Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)}}
