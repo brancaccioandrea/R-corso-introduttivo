@@ -5,6 +5,8 @@ Non posso darvi la ricetta per utilizzare R, né una lista di comandi da usare (
 
 Questi sono gli argomenti del corso: 
 
-- Introduzione [PDF](Slide/00-IntRo/intRo.pdf)
-- Strutture di dati [PDF](Slide/01-Strutture-di-dati/01-Strutture.pdf)
-- Working with dataframes [PDF](Slide/02-Working-with-dataframes/02-Working-with-dataframes.pdf)
+- 00-Introduzione [PDF](Slide/00-IntRo/00-intRoduzione.pdf)
+- 01-Strutture di dati [PDF](Slide/01-Strutture-di-dati/01-Strutture.pdf)
+- 02-Working with dataframes [PDF](Slide/02-Working-with-dataframes/02-Working-with-dataframes.pdf)
+- 03-Working with dataframes [PDF](Slide/03-statistiche-descRittive/03-statistich-descRittives.pdf)
+- 04-Working with dataframes [PDF](Slide/04-gRafici/04-gRafici.pdf)
