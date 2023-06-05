@@ -218,21 +218,21 @@ Ogni plot è composto da due regioni:
 
 \small
 
-A scatter plot: 
+Uno scatter plot: 
 
 ```{r eval = FALSE}
 x <- runif(50, 0, 2) # 50 numeri random 
-y <- runif(50, 0, 2) # da una dsitr. uniforme
+y <- runif(50, 0, 2) # da una distr. uniforme
 plot(x, y, main="Titolo", 
      sub="Sottotitolo", xlab="x-label",
      ylab="y-label") # ecco il plot
 ```
 
-
+Aggiunge del testo al plot
 
 
 ```{r eval = FALSE}
-text(0.6, 0.6, "Text at (0.6, 0.6)")
+text(0.6, 0.6, "Testo @ (0.6, 0.6)")
 abline(h=.6, v=.6, lty=2) # horizont. and vertic. 
                           # lines
 ```
@@ -253,6 +253,73 @@ abline(h=.6, v=.6, lty=2) # horiz. and vert. lines
 for(side in 1:4) mtext(-1:4, side=side, at=.7, line=-1:4)
 mtext(paste("Side", 1:4), side=1:4, line=-1, font=2)
 ```
+
+
+## Modificare il layout dei plot 
+
+Per ottenere 4 pannelli:
+
+```{r eval=FALSE}
+par(mfrow=c(2,2)) # i pannelli vengono riempiti in riga
+par(mfcol=c(2,2)) # i pannelli vengono riempiti in colonna 
+```
+
+
+## `hist()`
+
+```{r echo = F}
+benessere = read.csv("data/benessereScores.csv", 
+                     sep = ",", header = TRUE)
+```
+
+
+Produce un istogramma: 
+
+::: columns
+
+:::: column
+
+Frequenze: 
+\scriptsize
+```{r}
+hist(benessere$score_au)
+```
+
+
+::::
+
+:::: column
+Densità
+\scriptsize
+```{r}
+hist(benessere$score_au,
+     density=50, breaks=20, 
+     prob=TRUE, col = "darkblue")
+```
+
+::::
+
+:::
+
+
+
+## Multi plot (in riga)
+
+```{r}
+par(mfrow=c(2,2))
+
+hist(benessere$score_au,density=50, breaks=20, prob=TRUE)
+curve(dnorm(x, mean=mean(benessere$score_au), 
+            sd=sd(benessere$score_au)), 
+      col="darkblue", lwd=2, add=TRUE, yaxt="n")
+
+hist(benessere$score_au,density=50, breaks=20, prob=TRUE)
+curve(dnorm(x, mean=mean(benessere$score_au), 
+            sd=sd(benessere$score_au)), 
+      col="darkblue", lwd=2, add=TRUE, yaxt="n")
+
+```
+
 
 
 # `ggplot2`
@@ -282,20 +349,6 @@ dev.off()
 (You can do it also manually)
 
 
-## 
-
-Superato lo scoglio dell'importazione dei dati è tutta in discesa (kind of)
-
-Diversi tipi di formati: 
-
-- `.csv` comma separatered value $\rightarrow$ 
-sono tra i più usati, "universali" (nonché i miei preferiti)
-
-- `.tab` o `.dat` plain text, li potete creare anche con il blocco note del computer, molto comodi 
-
-- `.xls` o `.xlsx` molto comuni, servono pacchetti esterni 
-
-- `.sav` servono pacchetti esterni 
 
 ## `.csv`
 
