@@ -55,98 +55,7 @@ header-includes:
 editor_options: 
   chunk_output_type: console
 ---
-```{r setup, include=FALSE}
-library(knitr)
-knitr::opts_chunk$set(echo = TRUE, 
-                      eval = TRUE, 
-                      message = FALSE, 
-                      comment="", 
-                      tidy=FALSE, 
-                      warning = FALSE, 
-                      fig.align = "center", 
-                      out.width = "70%")
 
-
-library(ggplot2)
-library(gridExtra)
-library(tidyverse)
-# hook_output <- knitr::knit_hooks$get("output")
-# knitr::knit_hooks$set(output = function(x, options) {
-# if (!is.null(n <- options$out.lines)) {
-# x <- xfun::split_lines(x)
-# if (length(x) > n) {
-# # truncate the output
-# x <- c(head(x, n), "....\n")
-# } 
-# x <- paste(x, collapse = "\n")
-# } 
-# hook_output(x, options)
-# })
-
-library(knitr)
-hook_output = knit_hooks$get('output')
-knit_hooks$set(output = function(x, options) {
-  # this hook is used only when the linewidth option is not NULL
-  if (!is.null(n <- options$myline)) {
-    x = xfun::split_lines(x)
-    # any lines wider than n should be wrapped
-    if (any(nchar(x) > n)) x = strwrap(x, width = n)
-    x = paste(x, collapse = '\n')
-  } else if (!is.null(n <- options$out.lines)) {
-x <- xfun::split_lines(x)
-if (length(x) > n) {
-# truncate the output
-x <- c(head(x, n), "....\n")
-}
-x <- paste(x, collapse = "\n")
-}
-  hook_output(x, options)
-})
-set.seed(9999)
-library(knitr)
-library(faux)
-
-babies = rnorm_multi(n = 10, 
-                     varnames = c("genere", "peso", "altezza"),
-                     mu = c(0, 8, 80), 
-                     sd = c(1, 4, 10), 
-                     r = c(.30, .50, .80), 
-                     empirical = F)
-babies$id = paste("baby", 1:nrow(babies), sep ="")
-babies = babies[, c("id", "genere", "peso", "altezza")]
-babies$genere = norm2likert(babies$genere, 
-                            prob = c(.50, .50), 
-                            labels = c("m", "f"))
-babies$peso = norm2gamma(babies$peso, 
-                         10, 1)
-
-
-
-
-dataTol <- rnorm_multi(n = 100, 
-                  mu = c(0, 20, 20),
-                  sd = c(1, 5, 5),
-                  r = c(0.5, 0.5, 0.8), 
-                  varnames = c("A", "B", "C"),
-                  empirical = FALSE)
-dataTol$A = (norm2likert(dataTol$A, c(.17, .17, .17, .17, .17, .17)))
-dataTol$B = norm2binom(dataTol$B, size = 1, prob = .90)
-dataTol$C = norm2gamma(dataTol$C, shape = 2, rate = 4)
-
-# prendo la correlazione dei dati Tol che ho e simulo dei dati nuovi a partire da quelli 
-
-my_data = rnorm_multi(n = 100, 
-                      mu = c(10, 1000, 5), 
-                      sd = c(4, 500, 1), 
-                      r = c(.80, .30, 0.0), 
-                      varnames = c("benessere", "stipendio", "genere"))
-my_data$benessere = norm2pois(my_data$benessere, 
-                              5)
-my_data$stipendio = norm2trunc(my_data$stipendio, 
-                               min = 300)
-my_data$genere = norm2likert(my_data$genere, prob = c(.49, .51), 
-                             labels = c("m", "f"))
-```
 
 
 
@@ -159,10 +68,7 @@ my_data$genere = norm2likert(my_data$genere, prob = c(.49, .51),
 ##
 
 
-```{r echo = F}
-benessere = read.csv("data/benessereScores.csv", 
-                     sep = ",", header = TRUE)
-```
+
 
 
 - Grafici base
@@ -179,7 +85,8 @@ Entrambi:
 
 
 
-```{r eval = FALSE}
+
+```r
 plot()      # scatter plot, specialized plot methods
 boxplot()
 hist()      # histogram
@@ -200,7 +107,8 @@ interaction.plot()
 
 
 
-```{r eval = FALSE}
+
+```r
 points()  # Aggiunge punti al grafico
 lines()   # Aggiunge linee  al grafico 
 rect()
@@ -227,7 +135,8 @@ Ogni plot è composto da due regioni:
 
 Uno scatter plot: 
 
-```{r eval = FALSE}
+
+```r
 x <- runif(50, 0, 2) # 50 numeri random 
 y <- runif(50, 0, 2) # da una distr. uniforme
 plot(x, y, main="Titolo", 
@@ -238,7 +147,8 @@ plot(x, y, main="Titolo",
 Aggiunge del testo al plot
 
 
-```{r eval = FALSE}
+
+```r
 text(0.6, 0.6, "Testo @ (0.6, 0.6)")
 abline(h=.6, v=.6, lty=2) # horizont. and vertic. 
                           # lines
@@ -248,18 +158,8 @@ abline(h=.6, v=.6, lty=2) # horizont. and vertic.
 
 \small
 
-```{r eval=TRUE, echo=FALSE, out.width="100%"}
-x <- runif(50, 0, 2) # 50 uniform random numbers
-y <- runif(50, 0, 2)
-plot(x, y, main="Title", 
-     sub="Subtitle", xlab="x-label",
-     ylab="y-label", cex.lab=1.5) # produce plotting window
-text(0.6, 0.6, "Text at (0.6, 0.6)")
-abline(h=.6, v=.6, lty=2) # horiz. and vert. lines
 
-for(side in 1:4) mtext(-1:4, side=side, at=.7, line=-1:4)
-mtext(paste("Side", 1:4), side=1:4, line=-1, font=2)
-```
+\begin{center}\includegraphics[width=1\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-6-1} \end{center}
 
 
 ## Modificare il layout dei plot 
@@ -268,14 +168,16 @@ Vanno creati dei pannelli
 
 \small
 
-```{r eval=FALSE, myline = 80}
+
+```r
 par(mfrow=c(nrighe, ncolonne)) # i pannelli vengono riempiti in riga
 par(mfcol=c(nrighe, ncolonne)) # i pannelli vengono riempiti in colonna 
 ```
 
 ## `plot()`
 
-```{r eval = FALSE}
+
+```r
 plot(x) # solo una variabile
 plot(x, y) # due variabile (scatter plot)
 plot(y ~ x) # due variabile, y in funzione di x
@@ -284,7 +186,8 @@ plot(y ~ x) # due variabile, y in funzione di x
 
 ## Esempi: `plot(x)`
 
-```{r}
+
+```r
 with(benessere, 
      plot(score_au, 
           col = ifelse(genere == 1, "blue", "pink"), 
@@ -294,26 +197,40 @@ legend(x = 115, y = 48,
 ```
 
 
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-9-1} \end{center}
+
+
 ## Esempi: `plot(x, y)`
 
-```{r}
+
+```r
 with(benessere, 
      plot(score_au, score_ben))
-
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-10-1} \end{center}
 
 ## Esempi: `plot(y ~ x)`
 
-```{r}
+
+```r
 with(benessere, 
      plot(score_ben ~ score_au))
 ```
 
 
 
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-11-1} \end{center}
+
+
+
 ## Esempi: `plot(y ~ x)` con retta di regressione
 
-```{r}
+
+```r
 with(benessere, 
      plot(score_ben ~ score_au))
 abline(lm(score_ben ~ score_au, data = benessere), 
@@ -321,23 +238,36 @@ abline(lm(score_ben ~ score_au, data = benessere),
 ```
 
 
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-12-1} \end{center}
+
+
 ## Esempi: `plot(y ~ x)` con x categoriale
 
-```{r}
+
+```r
 benessere$genere <- factor(ifelse(benessere$genere == 1, 
                            "maschio", "femmina"))
 plot(score_au ~ genere, data = benessere)
-
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-13-1} \end{center}
 
 ## Attenzione!
 
 `plot(y ~ x)` con x categoriale è uguale a `boxplot(y ~ x)`
 
 
-```{r}
+
+```r
 boxplot(score_au ~ genere, data = benessere)
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-14-1} \end{center}
 
 
 
@@ -345,16 +275,22 @@ boxplot(score_au ~ genere, data = benessere)
 ## `hist()`: Frequenze
 
 \scriptsize
-```{r}
+
+```r
 hist(benessere$score_au)
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-15-1} \end{center}
 
 
 ## `hist()`: Densità
 
 Densità
 \scriptsize
-```{r}
+
+```r
 hist(benessere$score_au,
      density=50, breaks=20, 
      prob=TRUE, col = "darkblue")
@@ -362,11 +298,16 @@ hist(benessere$score_au,
 
 
 
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-16-1} \end{center}
+
+
+
 ## Multi plot (in riga)
 
 \footnotesize
 
-```{r eval = FALSE}
+
+```r
 par(mfrow=c(1, 2))
 
 hist(benessere$score_au,density=50, breaks=20, prob=TRUE, 
@@ -376,27 +317,12 @@ curve(dnorm(x, mean=mean(benessere$score_au),
       col="springgreen4", lwd=2, add=TRUE, yaxt="n")
 
 [...]
-
 ```
 
 
 
-```{r echo = FALSE}
-par(mfrow=c(2, 2))
 
-hist(benessere$score_au,density=50, breaks=20, prob=TRUE, 
-     main = "Score au")
-curve(dnorm(x, mean=mean(benessere$score_au), 
-            sd=sd(benessere$score_au)), 
-      col="springgreen4", lwd=2, add=TRUE, yaxt="n")
-
-hist(benessere$score_ben,density=50, breaks=20, prob=TRUE, 
-     main = "Score benessere")
-curve(dnorm(x, mean=mean(benessere$score_ben), 
-            sd=sd(benessere$score_ben)), 
-      col="royalblue", lwd=2, add=TRUE, yaxt="n")
-
-```
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-18-1} \end{center}
 
 
 
@@ -405,36 +331,15 @@ curve(dnorm(x, mean=mean(benessere$score_ben),
 ## Multiplot (in colonna)
 
 
-```{r echo = FALSE}
-par(mfcol= c(2,2))
-hist(benessere$score_au,density=50, breaks=20, prob=TRUE, 
-     main = "Score au")
-curve(dnorm(x, mean=mean(benessere$score_au), 
-            sd=sd(benessere$score_au)), 
-      col="springgreen4", lwd=2, add=TRUE, yaxt="n")
 
-hist(benessere$score_ben,density=50, breaks=20, prob=TRUE, 
-     main = "Score benessere")
-curve(dnorm(x, mean=mean(benessere$score_ben), 
-            sd=sd(benessere$score_ben)), 
-      col="royalblue", lwd=2, add=TRUE, yaxt="n")
-
-with(benessere, 
-     plot(score_au, score_ben, frame = FALSE))
-
-
-with(benessere, 
-     plot(score_au, score_ben, frame = FALSE))
-abline(lm(score_ben ~ score_au, data = benessere), col = "blue", lwd = 2)
-
-
-```
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-19-1} \end{center}
 
 
 ## Multiplot (in colonna), codice
 
 
-```{r echo = T, eval = FALSE}
+
+```r
 par(mfcol= c(2,2))
 hist(benessere$score_au,density=50, breaks=20, prob=TRUE, 
      main = "Score au")
@@ -455,8 +360,6 @@ with(benessere,
 with(benessere, 
      plot(score_au, score_ben, frame = FALSE))
 abline(lm(score_ben ~ score_au, data = benessere), col = "blue", lwd = 2)
-
-
 ```
 
 ## `barplot()`
@@ -470,29 +373,38 @@ Richiede uno step in più $\rightarrow$ la creazione della tabella delle frequen
 :::: column
 Frequenze assolute
 \small
-```{r}
+
+```r
 freq_item1 = table(benessere$item1)
 barplot(freq_item1)
-
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-21-1} \end{center}
 ::::
 
 
 :::: column
 Frequenze relative
 \small
-```{r}
+
+```r
 perc_item1 = freq_item1/sum(freq_item1)
 barplot(perc_item1, ylim = c(0, 1))
-
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-22-1} \end{center}
 
 ::::
 :::
 
 ## `barplot()` con più variabili 
 
-```{r}
+
+```r
 perc_item1_gender = table(benessere$genere, benessere$item1)
 perc_item1_gender[1,] = perc_item1_gender[1,]/table(benessere$item1)
 perc_item1_gender[2,] = perc_item1_gender[2,]/table(benessere$item1)
@@ -503,30 +415,21 @@ abline(h = .5, lty = 2, col = "red")
 
 
 
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-23-1} \end{center}
+
+
+
 ## Un esempio di multiplot 
 
-```{r echo = FALSE}
-item_ben = benessere[, grep("item", colnames(benessere))]
 
-par(mfrow = c(2, round(ncol(item_ben)/2  + 0.2)))
-temp = NULL
-for (i in 1:ncol(item_ben)) {
-  temp = table(benessere$genere, item_ben[,i])
-  for (j in 1:nrow(temp)) {
-    temp[j,] = temp[j,]/table(item_ben[,i])
-  }
-barplot(temp, ylim=c(0,1), legend = rownames(temp), 
-        main = colnames(item_ben)[i])
-abline(h = .5, lty = 2, col = "red")
-}
-
-```
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-24-1} \end{center}
 
 
 ## Un esempio di multiplot (codice) 
 \footnotesize
 
-```{r echo = TRUE, eval = FALSE, myline = 80}
+
+```r
 item_ben = benessere[, grep("item", colnames(benessere))]
 
 par(mfrow = c(2, round(ncol(item_ben)/2  + 0.2)))
@@ -539,7 +442,6 @@ for (i in 1:ncol(item_ben)) {
 barplot(temp, ylim=c(0,1), legend = rownames(temp), main = colnames(item_ben)[i])
 abline(h = .5, lty = 2, col = "red")
 }
-
 ```
 
 
@@ -556,19 +458,14 @@ La relazione tra peso e altezza cambia a seconda del genere?
 
 
 
-```{r echo = FALSE}
-babies = read.table("data/babies.tab")
 
-plot(altezza ~ peso, data = babies, 
-     col = ifelse(genere == "f", "pink", "blue"), 
-     pch = 16, main = "Peso - altezza dei bambini", 
-     cex = 3)
-```
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-26-1} \end{center}
 
 
 ## 
 
-```{r}
+
+```r
 babies$cat_weight = with(babies, 
                          ifelse(peso <= 
 quantile(babies$peso)[2], "light", 
@@ -581,13 +478,31 @@ babies$cat_weight = factor(babies$cat_weight,
 babies
 ```
 
+```
+       id genere      peso  altezza cat_weight
+1   baby1      f  7.424646 62.07722      light
+2   baby2      m  7.442727 58.18877      light
+3   baby3      f  9.512598 84.52737      heavy
+4   baby4      f 11.306349 85.13573     medium
+5   baby5      m  9.345165 75.23783      heavy
+6   baby6      m  5.411290 46.80163      light
+7   baby7      m 17.342840 99.21825     medium
+8   baby8      f 11.151913 90.01151      heavy
+9   baby9      f 11.854991 82.21790     medium
+10 baby10      f  8.906013 65.35360      heavy
+```
+
 ## 
 
-```{r}
+
+```r
 with(babies, 
      interaction.plot(cat_weight, genere, altezza))
-
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-28-1} \end{center}
 
 
 # `ggplot2`
@@ -596,8 +511,8 @@ with(babies,
 
 è più difficile ma è anche più facile: 
 
-```{r eval = FALSE}
 
+```r
 ggplot(dati, 
        ars(x = variabile.x, 
            y = variabile.y, 
@@ -606,14 +521,14 @@ ggplot(dati,
            shape =  variabile.shape, 
            size = variabile.size, 
            ...)) + geom_tipo.grafico() + ...
-
 ```
 
 Solitamente vuole i dati in formato long
 
 ## Scatter plot 
 
-```{r}
+
+```r
 ggplot(benessere, 
        aes(x = score_au, y = score_ben, 
            col = genere, 
@@ -621,14 +536,23 @@ ggplot(benessere,
   geom_point(size = 3)
 ```
 
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-30-1} \end{center}
+
 ## Scatter plot con retta di regressione 
 
-```{r}
+
+```r
 ggplot(benessere, 
        aes(x = score_au, y = score_ben)) + 
   geom_point(size = 3) + 
   geom_smooth(method = "lm", formula = y ~ x) + theme_light()
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-31-1} \end{center}
 
 
 ## `boxplot()` e `violin_plot()`
@@ -639,17 +563,22 @@ Richiedono che i dati siano in formato long:
 
 
 
-```{r echo = FALSE}
-data.frame(id = rep(paste0("sbj", 1:3), each = 2), 
-           condition = rep(c("A", "B"),  length.out = 6), 
-           mean_time = rgamma(6, 10, 3))
 
+```
+    id condition mean_time
+1 sbj1         A  4.136174
+2 sbj1         B  2.639523
+3 sbj2         A  2.547628
+4 sbj2         B  4.319068
+5 sbj3         A  4.265100
+6 sbj3         B  4.113846
 ```
 
 
 ## 
 
-```{r}
+
+```r
 small = benessere[, c("ID", "score_au", "score_ben")]
 score_long  = reshape(small, 
         idvar = "ID", 
@@ -658,6 +587,16 @@ score_long  = reshape(small,
         varying = list(names(small)[-1]), 
         direction = "long")
 head(score_long)
+```
+
+```
+           ID    score value
+1.score_au  1 score_au    33
+2.score_au  2 score_au    40
+3.score_au  3 score_au    38
+4.score_au  4 score_au    38
+5.score_au  5 score_au    26
+6.score_au  6 score_au    33
 ```
 
 ## boxplot vs violinplot
@@ -669,11 +608,16 @@ head(score_long)
 Boxplot
 \scriptsize
 
-```{r myline = 60}
+
+```r
 ggplot(score_long, 
        aes(x = score, y = value,
            fill = score)) + geom_boxplot()
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-34-1} \end{center}
 
 
 ::::
@@ -684,11 +628,16 @@ Violinplot
 
 \scriptsize
 
-```{r myline =60}
+
+```r
 ggplot(score_long, 
        aes(x = score, y = value,
            fill = score)) + geom_violin(trim = FALSE) 
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-35-1} \end{center}
 
 
 ::::
@@ -699,8 +648,8 @@ ggplot(score_long,
 
 
 
-```{r}
 
+```r
 score_long = merge(score_long, benessere[, c("ID", "genere")])
 ggplot(score_long, 
        aes(x = score, y = value,
@@ -709,12 +658,17 @@ ggplot(score_long,
 
 
 
+\begin{center}\includegraphics[width=0.7\linewidth]{04-gRafici_files/figure-beamer/unnamed-chunk-36-1} \end{center}
+
+
+
 # Esportare i grafici
 
 ## Esportare i grafici
 
 
-```{r eval = F}
+
+```r
 postscript()  # vector graphics
 pdf()
 
@@ -727,7 +681,8 @@ bmp()
 
 Remember to run off the graphic device once you've saved the graph:
 
-```{r eval=FALSE}
+
+```r
 dev.off()
 ```
 
