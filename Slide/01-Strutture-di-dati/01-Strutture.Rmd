@@ -172,7 +172,7 @@ ses
 ```
 
 Si può cambaire l'ordine dei livelli:
-
+\footnotesize
 ```{r}
 ses1 = factor(ses, levels = c("medium", "high", "low")) 
 ```
@@ -252,15 +252,35 @@ Se i vettori non hanno la stessa lunghezza (o uno non è un multiplo dell'altro)
 
 Applicando una funzione a un vettore $\rightarrow$ viene applicata a **tutti** gli elementi del vettore
 
+\footnotesize
+
 ```{r}
 sqrt(a)
 ```
+
+\normalsize
 
 La stessa operazione si può applicare a ogni singolo elemento del vettore 
 
 ```{r}
 (a - mean(a))^2 # squared deviation
 ```
+
+## Your turn! 
+
+
+```{r echo = FALSE, fig.align='center', out.width="19%"}
+knitr::include_graphics("img/work.png")
+```
+
+- Create un vettore di tipo `character`: 
+  - `condizioneA` ripetuto 3 volte 
+  - `condizioneB` ripetuto 2 volte 
+  - `condizioneC` ripetuto 5 volte 
+
+- Trasformate il vettore in `factor`
+- Cambiate i livelli del vettore: `condizioneB`, `condizioneA`, `condizioneC`
+- Create un vettore (`my_vector`) che vada da $-3$ a $3$ a step di 0.2
 
 
 ## Indicizzare i vettori 
@@ -323,7 +343,7 @@ peso
 ```
 
 
-\small
+\footnotesize
 ```{r eval=TRUE}
 peso[2]        # secondo elemento del vettore peso
 (peso[6] = 15.2) # sostituisce il sesto elemento del v. peso
@@ -355,7 +375,17 @@ peso[peso > 7] # valori in peso maggiori di 7
 peso[peso >= 4.5 & peso < 8] # valori tra 4.5 e 8 
 ```
 
+## Your turn! 
 
+
+```{r echo = FALSE, fig.align='center', out.width="19%"}
+knitr::include_graphics("img/work.png")
+```
+
+- Prendete il vettore numerico che avete creato prima: 
+  - Estraete il terzo elemento 
+  - Estraete tutti gli elementi dispari del vettore e assegnateli a `my_vector1`
+  - Estraete tutti gli elementi di `my_vector1` $\leq 0$
 
 # Matrici 
 
@@ -366,6 +396,8 @@ peso[peso >= 4.5 & peso < 8] # valori tra 4.5 e 8
 
 
 `matrix(data, nrow, ncol, byrow = TRUE)`
+
+\
 
 Crea una matrice $3 \times 4$ e la assegna all'oggetto `A`:
 
@@ -462,8 +494,20 @@ A
 
 \onslide<1->`A[2, 3]` $\rightarrow$ \onslide<4-> `r A[2, 3]` 
 
+## Your turn! 
 
 
+```{r echo = FALSE, fig.align='center', out.width="19%"}
+knitr::include_graphics("img/work.png")
+```
+
+- Create una matrice $3 \times 3$ con la tabellina del 3 (fino al 24, valori per riga)
+- Assegnate i nomi alle colonne e alle righe
+- Assegnate la trasposta della matrice all'oggetto `my_t`
+- Estraete da `my_t`: 
+  - la prima riga 
+  - la seconda colonna
+  - la terza cella della terza riga ([3, 3])
 
 # Array
 
@@ -538,6 +582,8 @@ str(my_list)
 ```
 
 
+
+
 ## Indicizzare le liste 
 
 Gli elementi della lista possono essere indicizzati con `$` (se la lista ha dei nomi):
@@ -576,7 +622,20 @@ my_list[[2]]
 
 
 
+## Your turn! 
 
+
+```{r echo = FALSE, fig.align='center', out.width="19%"}
+knitr::include_graphics("img/work.png")
+```
+
+
+- Create una lista che contenga: 
+  - La matrice originale con la tabellina del 3
+  - La trasposta della matrice
+  - Tutti gli elementi $\geq 0$ di `my_vector1`
+  
+- Date un nome ad ogni elemento all'interno della lista
 
 # Data frames
 
@@ -631,11 +690,13 @@ babies[, "id"] # column id
 babies[2, ] # second row of babies (obs on baby 2)
 ```
 
-Logic applies:
+## Logic applies:
 
-```{r eval = FALSE}
-babies[babies$peso > 7, ] # filtra per tutte le righe con peso > 7
-babies[babies$id %in% c("sbj1", "sbj6"), ] # restituisce le osservazioni di questi due soggetti
+```{r eval = TRUE}
+babies[babies$peso > 7, ] # filtra per tutte le righe con 
+    #peso > 7
+babies[babies$id %in% c("sbj1", "sbj6"), ] # restituisce le osservazioni 
+    # di questi due soggetti
 ```
 
 
@@ -646,6 +707,8 @@ babies[babies$id %in% c("sbj1", "sbj6"), ] # restituisce le osservazioni di ques
 dim(babies) # data frame con 6 righe e 3 colonne
 
 names(babies) # = colnames(babies)
+
+head(babies) # fa vedere le prime sei righe del data frame
 
 ```
 
@@ -660,4 +723,19 @@ View(babies) # open data viewer
 \footnotesize Questi comandi possono essere usati anche su altri oggetti `R`
 
 
+## Your turn! 
+
+
+```{r echo = FALSE, fig.align='center', out.width="19%"}
+knitr::include_graphics("img/work.png")
+```
+
+- Create un data frame con 10 osservazioni e le seguenti colonne: 
+  - `id`: `character`, id dei soggetti 
+  - `ses`: `factor`, livello socio economico dei soggetti con 3 livelli, `low`, `medium`, `high` (3 `low`, 5 `medium`, 2 `high`)
+  - `income`: `numeric`
+
+- Filtrate il data set: 
+  - Soggetti con `high` `ses`
+  - Soggetti con `income` > 2000
 
