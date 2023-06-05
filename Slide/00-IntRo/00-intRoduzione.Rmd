@@ -104,7 +104,7 @@ knitr::include_graphics("img/coRso.png")
 
 - Permette la replicabilità dei risultati $\rightarrow$ è gratis
 
-- *R community is the beast feature of R*
+- *R community is the best feature of R*
 
 - Aiuto online e gratuito
 
@@ -198,7 +198,7 @@ Rischiate di perdere dei pezzi e di non avere tutto ordinato nelle cartelle
 
 Per risolvere questo problema $\rightarrow$ si possono usare gli R project (progetti R)
 
-Un progetto R crea una sua directory, tutti i file che vengono salvati al suo interno sono sempre accessibile senza bisogno di settare *a mano* tutte le volte la directory
+Un progetto R crea una sua directory, tutti i file che vengono salvati al suo interno sono sempre accessibili senza bisogno di settare *a mano* tutte le volte la directory
 
 Sono molto comodi perché: 
 
@@ -389,7 +389,7 @@ Esistono fondamentalmente due comandi di assegnazione
 
 2. `X <- log(2^2)` \vspace{3mm} =) Fate contenti i puristi di R
 
-La logica è che l'oggetto a destro (l'operazione e quindi il risultato che se ne ottiene) viene assegnato (`=` oppure `<-`) alla variabile (o oggetto) a destra
+La logica è che l'oggetto a destra (l'operazione e quindi il risultato che se ne ottiene) viene assegnato (`=` oppure `<-`) alla variabile (o oggetto) a destra
 
 \textcolor{template}{Attenzione!} Siccome `R` è case sensitive: `x` e `X` sono due oggetti differenti!
 
