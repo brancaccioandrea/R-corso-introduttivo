@@ -161,10 +161,10 @@ v_chr
 ```
 
 
-`factor`: Usa numeri o carattarri per identificare i livelli della variabile: 
+`factor`: Usa numeri o caratteri per identificare i livelli della variabile: 
 
 ```{r}
-ses = factor(c(rep(c("low", "medium", "high"), each = 2)))
+ses = factor(rep(c("low", "medium", "high"), each = 2))
 ```
 
 ```{r echo = FALSE}
