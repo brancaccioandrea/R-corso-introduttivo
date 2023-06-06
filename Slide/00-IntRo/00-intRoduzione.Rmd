@@ -382,9 +382,9 @@ Le variabili vengono create "assegnando" loro i risultati delle operazioni
 Esistono fondamentalmente due comandi di assegnazione
 
 
-1. `x = exp(2^2)` \vspace{3mm} =( non piace molto ai puristi di R ma è ugaule a Python
+1. `x = exp(2^2)` \vspace{3mm} \color{red}:(\normalcolor non piace molto ai puristi di R ma è ugaule a Python
 
-2. `X <- log(2^2)` \vspace{3mm} =) Fate contenti i puristi di R
+2. `X <- log(2^2)` \vspace{3mm} \color{green}:)\normalcolor Fate contenti i puristi di R
 
 La logica è che l'oggetto a destra (l'operazione e quindi il risultato che se ne ottiene) viene assegnato (`=` oppure `<-`) alla variabile (o oggetto) a destra
 
