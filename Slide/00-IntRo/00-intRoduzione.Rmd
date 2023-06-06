@@ -85,15 +85,12 @@ library(knitr)
 
 ## Materiale del corso 
 
-```{r out.width="40%", fig.align='center', echo=FALSE}
-knitr::include_graphics("img/coRso.png")
-```
- 
+\ 
+
 \
 
-\centering 
 
-`https://ottaviae.github.io/coRso/`
+[https://github.com/OttaviaE/coRso](https://github.com/OttaviaE/coRso)
 
 
 # PeRché?
