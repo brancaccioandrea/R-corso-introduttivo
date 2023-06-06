@@ -11,4 +11,4 @@ Questi sono gli argomenti del corso:
 - 03-Statistiche descrittive [PDF](Slide/03-statistiche-descRittive/03-statistiche-descRittives.pdf)
 - 04-Grafici [PDF](Slide/04-gRafici/04-gRafici.pdf)
 
-Nella cartella degli argomenti da 2 a 4 esiste una sotto cartella `data` dove si possono trovare i dati di ogni che servono per ogni lezione.
+Nella cartella degli argomenti da [2](Slide/02-Working-with-dataframes/data), [3](Slide/03-statistiche-descRittive/data) e [4](Slide/04-gRafici/data) esiste una sotto cartella `data` dove si possono trovare i dati di ogni che servono per ogni lezione.
