@@ -529,7 +529,7 @@ Questo ambiente può essere ricaricato nell'ambiente di R:
 
 
 ```{r eval=FALSE}
-load("my-Computations.RData")
+load("my-computations.RData")
 ```
 
 
