@@ -386,7 +386,7 @@ Esistono fondamentalmente due comandi di assegnazione
 
 2. `X <- log(2^2)` \vspace{3mm} \color{green}:)\normalcolor Fate contenti i puristi di R
 
-La logica è che l'oggetto a destra (l'operazione e quindi il risultato che se ne ottiene) viene assegnato (`=` oppure `<-`) alla variabile (o oggetto) a destra
+La logica è che l'oggetto a destra (l'operazione e quindi il risultato che se ne ottiene) viene assegnato (`=` oppure `<-`) alla variabile (o oggetto) a sinistra
 
 \textcolor{template}{Attenzione!} Siccome `R` è case sensitive: `x` e `X` sono due oggetti differenti!
 
@@ -473,7 +473,7 @@ Copia \& Incolla l'errore su google
 
 Se non si sa fare qualcosa  "how to **[something]** in r"
 
-Chiedere a `R`: Nella consolle si può scrivere `?nome.funzione()` per accedere alla documentazione sulla funzione:
+Chiedere a `R`: Nella console si può scrivere `?nome.funzione()` per accedere alla documentazione sulla funzione:
 
     ?mean()
 
@@ -511,7 +511,7 @@ MA si può anche togliere tutto insieme
 
 ```{r eval = FALSE}
 ls() # lista gli oggetti che sono nell'environment
-rm(A) # rimuove l'oggetto A all'environment
+rm(A) # rimuove l'oggetto A dall'environment
 rm(list=ls()) # rimuove tutto dall'environment
 
 ```
