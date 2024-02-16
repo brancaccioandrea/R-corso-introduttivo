@@ -1,20 +1,17 @@
 ---
-title: "00-Int`R`oduzione"
-date: '8-9 giugno 2023'
+title: "Int`R`oduzione"
 author: |
-  | Ottavia M. Epifania
-  | Università di Padova
-institute: "Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)"
+  | Brancaccio Andrea
+institute: "Università di Padova"
 output: 
   beamer_presentation: 
     theme: EastLansing
     colortheme: spruce
     highlight: kate
 header-includes:
-    - \AtBeginDocument{\title[co\texttt{R}so]{00-Int\texttt{R}oduzione}}
-    - \AtBeginDocument{\author[OME, UniPD]{Ottavia M. Epifania, Ph.D}}
-    - \AtBeginDocument{\date[8-9 Giugno]{8-9 Giugno 2023}}
-    - \AtBeginDocument{\institute[Lezioni UniCatt]{Lezione di Dottorato @Università Cattolica del Sacro Cuore (MI)}}
+    - \AtBeginDocument{\title[co\texttt{R}so]{Int\texttt{R}oduzione}}
+    - \AtBeginDocument{\author[AB, UniPD]{Andrea Brancaccio, Ph.D}}
+    - \AtBeginDocument{\date[AA. 2023/2024]{Anno Accademico 2023/2024}}
     - \usepackage{graphicx} 
     - \usepackage{setspace}
     - \usepackage{tabularx}
@@ -83,46 +80,37 @@ library(knitr)
 
 \tableofcontents
 
-## Materiale del corso 
+# Un po' di sto`R`ia 
 
-\ 
+- I primi sviluppatori di R sono stati Robert Gentleman e Ross Ihaka del Dipartimento di Statistica dell’Università di Auckland
 
-\
+- R si sviluppa dal linguaggio S 
 
+- Fun Fact: il nome deriva dal susseguirsi alfabetico delle lettere
 
-[https://github.com/OttaviaE/coRso](https://github.com/OttaviaE/coRso)
+- A partire da 1997 si è costituito un gruppo di studiosi provenienti da ogni parte del mondo denominato “R Development Core Team”
+
+- L’ “R Development Core Team” si occupa di sviluppare e aggiornare costantemente R e di diffondere R attraverso meeting e conferenze
 
 
 # PeRché?
 
-## Le cose belle
+## Perchè usare R
 
-- Open-source: `R` è gratuito, `RStudio` (la IDE di `R`) no, ma la versione free è più che sufficiente
+- `R` è gratuito, open source e GNU 
 
-- Permette la replicabilità dei risultati $\rightarrow$ è gratis
+- `RStudio` (la  di `R`) no, ma la versione free è più che sufficiente
+
+- Permette la replicabilità dei risultati 
 
 - *R community is the best feature of R*
 
-- Aiuto online e gratuito
 
+## Software statistico?
 
-## Le cose un po' meno belle 
+"Many users think of R as a statistics system. We prefer to think of it as an environment within which statistical techniques are implemented."
 
-- Difficile da imparare all'inizio
-
-- Non è intuitivo (all'inizio) $\rightarrow$ se non si ha già una vaga idea di dove partire non si riesce a fare nulla
-
-
-## Le cose cose belle nelle cose brutte
-
-
-
-- Più dimestichezza nell'analisi dei dati, più conoscenza del dato, modelli più complessi 
-
-
-- Permette di addentrarsi sempre di più nei linguaggi di programmazione
-
-- Imparare un altro linguaggio di programmazione dopo aver imparato `R` è (quasi) una passeggiata 
+Cit. [https://www.r-project.org/about.html](https://www.r-project.org/about.html)
 
 <!-- ## La curva di apprendimento -->
 
